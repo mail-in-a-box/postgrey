@@ -4,15 +4,11 @@
 # with --whitelist-clients=xxx
 
 # Debian-specific additions
-gluck.debian.org
-haydn.debian.org
-klecker.debian.org
-master.debian.org
-merkel.debian.org
-murphy.debian.org
-newmurphy.debian.org
-newraff.debian.org
-spohr.debian.org
+# I *know* they run real mail queues, so greylisting only creates
+# bigger load for them.
+debconf.org
+debian.org
+spi-inc.org
 
 # greylisting.org: Southwest Airlines (unique sender, no retry)
 southwest.com
@@ -52,8 +48,8 @@ accor-hotels.com
 mot.com
 # 2004-07-01: nic.fr (address verification, reported by Arnaud Launay)
 nic.fr
-# 2004-07-01: verizon.net (address verification, reported by Bill Moran and Eric)
-/^sc\d+pub\.verizon\.net$/
+# 2004-07-01: verizon.net (address verification, reported by Bill Moran and Eric, adapted by Adam C. Mathews)
+/^s[cv]\d+pub\.verizon\.net$/
 # 2004-07-02: cs.columbia.edu (no retry)
 cs.columbia.edu
 # 2004-07-02: papersinvited.com (no retry)
@@ -162,3 +158,32 @@ berlin.ptb.de
 registrarmail.net
 # google.com (big pool, reported by Matthias Dyer)
 /^.*-out-.*\.google\.com$/
+# orange.fr (big pool, reported by Loïc Le Loarer)
+/^smtp\d+\.orange\.fr$/
+# citigroup.com (slow retry, reported by Michael Monnerie)
+/^smtp\d+.citigroup.com$/
+# cruisingclub.ch (no retry)
+mail.ccs-cruising.ch
+# digg.com (no retry, Debian #406774)
+diggstage01.digg.com
+# liberal.ca (retries only during 270 seconds, Debian #406774)
+smtp.liberal.ca
+# pi.ws (pool + long retry, Debian #409851)
+/^mail[12]\.pi\.ws$/
+# rambler.ru (big pool, reported by Michael Monnerie)
+rambler.ru
+# free.fr (big pool, reported by Denis Sacchet)
+/^smtp[0-9]+-g[0-9]+\.free\.fr$/
+/^postfix[0-9]+-g[0-9]+\.free\.fr$/
+# thehartford.com (pool + long retry, reported by Jacob Leifman)
+/^netmail\d+\.thehartford\.com$/
+# abb.com (only one retry, reported by Roman Plessl)
+/^nse\d+\.abb\.com$/
+# 2007-07-27: sourceforge.net (sender verification)
+lists.sourceforge.net
+# 2007-08-06: polytec.de (no retry, reported by Patrick McLean)
+polytec.de
+# 2007-09-06: qualiflow.com (no retry, reported by Alex Beckert)
+/^mail\d+\.msg\.oleane\.net$/
+# 2008-07-18: large pool, reported by Peter Samuelson
+/^mxphxpool\d+\.ebay\.com$/

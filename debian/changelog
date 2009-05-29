@@ -1,3 +1,78 @@
+postgrey (1.31-3) unstable; urgency=low
+
+  * added eBay whitelist entry (reported by peterS)
+  * fix recipient whitelist (closes: #487485)
+  * admin that I don't know how postfix generetes queue ids (closes: #480778)
+  * allow specifying the syslog facility to report to (closes: #446489)
+  * include changes from NMU and kill the statoverride, thanks Marcin
+
+ -- Adrian von Bidder <cmot@debian.org>  Fri, 18 Jul 2008 08:29:49 +0200
+
+postgrey (1.31-2.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * postinst: decouple directory creation from registering a statoverride,
+    making the script idempotent (closes: #478821)
+
+ -- Marcin Owsiany <porridge@debian.org>  Wed, 07 May 2008 19:22:19 +0100
+
+postgrey (1.31-2) unstable; urgency=low
+
+  * Thanks to bug and patch submitters.
+  * Conflict with old libsys-syslog-perl versions (closes: #425060)
+  * Proposed fixes from the logcheck police force (closes: #443909)
+  * Fix bashism in debian/rules (closes: #457680)
+  * Download has moved, fix debia/watch (closes: #453538)
+
+ -- Adrian von Bidder <cmot@debian.org>  Thu, 24 Jan 2008 21:08:59 +0100
+
+postgrey (1.31-1) unstable; urgency=low
+
+  * New upstream version
+    - Socket now gets 0666 permissions (closes: #376910)
+
+ -- Adrian von Bidder <cmot@debian.org>  Sun,  9 Sep 2007 15:33:18 +0200
+
+postgrey (1.30-2) unstable; urgency=low
+
+  * Logcheck: sender is optional, too.
+
+ -- Adrian von Bidder <cmot@debian.org>  Sun, 26 Aug 2007 09:13:11 +0200
+
+postgrey (1.30-1) unstable; urgency=low
+
+  * New upstream version
+    - Sys::Syslog version handling (closes: #425060)
+  * Missed something when updating logcheck patterns (closes: #439207)
+  * logging of unknown host: svn r236 from upstream (closes: #436644)
+
+ -- Adrian von Bidder <cmot@debian.org>  Sat, 25 Aug 2007 20:35:21 +0200
+
+postgrey (1.29-1) unstable; urgency=low
+
+  * New upstream version
+  * updated logcheck patterns (closes: #434184, #408447)
+    (See #425060, though, which is really a Sys::Syslog bug)
+
+ -- Adrian von Bidder <cmot@debian.org>  Tue, 24 Jul 2007 22:14:32 +0200
+
+postgrey (1.28-2) unstable; urgency=low
+
+  * Stupid md5sums ...
+
+ -- Adrian von Bidder <cmot@debian.org>  Thu, 12 Jul 2007 10:26:07 +0200
+
+postgrey (1.28-1) unstable; urgency=low
+
+  * This release is dedicated to Luk Claes
+  * New upstream release (closes: #432048)
+    - whitelist additions (closes: #409851, #406774)
+    - typo & documentation error (closes: #427298)
+    - changed and improved log messages (closes: #208447, #411087)
+  * some more Debian-related machines to whitelist (closes: #404971)
+
+ -- Adrian von Bidder <cmot@debian.org>  Sat,  7 Jul 2007 10:29:28 +0200
+
 postgrey (1.27-4) unstable; urgency=medium
 
   * Try to catch etch...

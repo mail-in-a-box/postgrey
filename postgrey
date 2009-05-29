@@ -1,7 +1,8 @@
 #!/usr/bin/perl -T -w
 
 # Postgrey: a Postfix Greylisting Policy Server
-# Copyright (c) 2004-2006 ETH Zurich
+# Copyright (c) 2004-2007 ETH Zurich
+# Copyright (c) 2007 Open Systems AG, Switzerland
 # released under the GNU General Public License
 
 # see the documentation with 'perldoc postgrey'
@@ -10,16 +11,41 @@ package postgrey;
 use strict;
 use Pod::Usage;
 use Getopt::Long 2.25 qw(:config posix_default no_ignore_case);
+use Net::Server; # used only to find out which version we use
 use Net::Server::Multiplex;
 use BerkeleyDB;
 use Fcntl ':flock'; # import LOCK_* constants
 use Sys::Hostname;
+use Sys::Syslog; # used only to find out which version we use
 use POSIX qw(strftime setlocale LC_ALL);
 
 use vars qw(@ISA);
 @ISA = qw(Net::Server::Multiplex);
 
-my $VERSION = "1.27";
+my $VERSION = '1.31';
+my $DEFAULT_DBDIR = '/var/lib/postgrey';
+my $CONFIG_DIR = '/etc/postgrey';
+
+sub cidr_parse($)
+{
+    defined $_[0] or return undef;
+    $_[0] =~ /^(\d+)\.(\d+)\.(\d+)\.(\d+)\/(\d+)$/ or return undef;
+    $1 < 256 and $2 < 256 and $3 < 256 and $4 < 256 and $5 <= 32 and $5 > 0
+    	or return undef;
+    my $net = ($1<<24)+($2<<16)+($3<<8)+$4;
+    my $mask = ~((1<<(32-$5))-1);
+    return ($net & $mask, $mask);
+}
+
+sub cidr_match($$$)
+{
+    my ($net, $mask, $addr) = @_;
+    return undef unless defined $net and defined $mask and defined $addr;
+    if($addr =~ /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/) {
+        $addr =  ($1<<24)+($2<<16)+($3<<8)+$4;
+    }
+    return ($addr & $mask) == $net;
+}
 
 sub read_clients_whitelists($)
 {
@@ -27,6 +53,7 @@ sub read_clients_whitelists($)
 
     my @whitelist_clients = ();
     my @whitelist_ips = ();
+    my @whitelist_cidr = ();
     for my $f (@{$self->{postgrey}{whitelist_clients_files}}) {
         if(open(CLIENTS, $f)) {
             while(<CLIENTS>) {
@@ -37,29 +64,39 @@ sub read_clients_whitelists($)
                 }
                 elsif(/^\d{1,3}(?:\.\d{1,3}){0,3}$/) {
                     # IP address or part of it
-                    push @whitelist_ips, qr{^$_};
+                    push @whitelist_ips, qr{^\Q$_\E\b};
                 }
                 elsif(/^.*\:.*\:.*$/) {
                     # IPv6?
-                    push @whitelist_ips, qr{^$_};
+                    push @whitelist_ips, qr{^\Q$_\E\b};
+                }
+                elsif(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$/) {
+                    my ($net, $mask) = cidr_parse($_);
+                    if(defined $mask) {
+                        push @whitelist_cidr, [ $net, $mask ];
+                    }
+                    else {
+                        warn "$f line $.: invalid cidr address\n";
+                    }
                 }
                 # note: we had ^[^\s\/]+$ but it triggers a bug in perl 5.8.0
                 elsif(/^\S+$/) {
-                    push @whitelist_clients, qr{\Q$_\E$}i;
+                    push @whitelist_clients, qr{(?:^|\.)\Q$_\E$}i;
                 }
                 else {
-                    warn "WARNING: $f line $.: doesn't look like a hostname\n";
+                    warn "$f line $.: doesn't look like a hostname\n";
                 }
             }
         }
         else {
-            warn "WARNING: can't open $f: $!\n" unless $f =~ /\.local$/;
             # do not warn about .local file: maybe the user just doesn't have one
+            warn "can't open $f: $!\n" unless $f =~ /\.local$/;
         }
         close(CLIENTS);
     }
     $self->{postgrey}{whitelist_clients} = \@whitelist_clients;
     $self->{postgrey}{whitelist_ips}     = \@whitelist_ips;
+    $self->{postgrey}{whitelist_cidr}    = \@whitelist_cidr;
 }
 
 sub read_recipients_whitelists($)
@@ -77,7 +114,7 @@ sub read_recipients_whitelists($)
                     push @whitelist_recipients, qr{$1}i;
                 }
                 elsif(!/^\S+$/) {
-                    warn "WARNING: $f line $.: doesn't look like an address\n";
+                    warn "$f line $.: doesn't look like an address\n";
                 }
                 # postfix access(5) syntax:
                 elsif(defined $domain and $domain ne '') {
@@ -90,13 +127,13 @@ sub read_recipients_whitelists($)
                 }
                 else {
                     # domain ($user is the domain)
-                    push @whitelist_recipients, qr{\Q$user\E$}i;
+                    push @whitelist_recipients, qr{(?:\@|\.)\Q$user\E$}i;
                 }
             }
         }
         else {
-            warn "WARNING: can't open $f: $!\n" unless $f =~ /\.local$/;
             # do not warn about .local file: maybe the user just doesn't have one
+            warn "can't open $f: $!\n" unless $f =~ /\.local$/;
         }
         close(RECIPIENTS);
     }
@@ -138,7 +175,36 @@ sub mylog($$$)
 {
     my ($self, $level, $string) = @_;
     $string =~ s/\%/%%/g; # for Net::Server <= 0.87
-    $self->log($level, $string);
+    if(!defined $Sys::Syslog::VERSION or $Sys::Syslog::VERSION lt '0.15'
+    or !defined $Net::Server::VERSION or $Net::Server::VERSION lt '0.94') {
+        # Workaround for a crash when syslog daemon is temporarily not
+        # present (for example on syslog rotation).
+        # Note that this is not necessary with Sys::Syslog >= 0.15 and
+        # Net::Server >= 0.94 thanks to the nofatal Option.
+        eval {
+            local $SIG{"__DIE__"} = sub { };
+            $self->log($level, $string);
+        };
+    }
+    else {
+        $self->log($level, $string);
+    }
+}
+
+sub mylog_action($$$;$$)
+{
+    my ($self, $attr, $action, $reason, $additional_info) = @_;
+
+    my $str;
+    $str .= $attr->{queue_id} . ': ' if $attr->{queue_id};
+    my @info = ("action=$action");
+    push @info, "reason=$reason" if defined $reason;
+    push @info, $additional_info if defined $additional_info;
+    for my $a (qw(client_name client_address sender recipient)) {
+        push @info, "$a=$attr->{$a}" if $attr->{$a};
+    }
+    $str .= join(', ', @info);
+    $self->mylog(2, $str);
 }
 
 sub do_maintenance($$)
@@ -149,11 +215,11 @@ sub do_maintenance($$)
 
     # remove old db logs
 
-    $self->mylog(2, "cleaning up old logs...");
+    $self->mylog(1, "cleaning up old logs...");
     $db_env->txn_checkpoint(0, 0) and
         warn "can't checkpoint !? $BerkeleyDB::Error";
     for my $l ($db_env->log_archive(DB_ARCH_ABS)) {
-        $self->mylog(2, "rm $l");
+        $self->mylog(1, "rm $l");
         unlink $l or warn "can't remove db log $l: $!\n";
     }
 
@@ -166,7 +232,7 @@ sub do_maintenance($$)
     if($hour > 1 and $hour < 7 and
         $now - $self->{postgrey}{last_maint_keys} >= 82800)
     {
-        $self->mylog(2, "cleaning up old entries...");
+        $self->mylog(1, "cleaning up old entries...");
         my $max_age = $self->{postgrey}{max_age};
         my $retry_window = $self->{postgrey}{retry_window};
         my ($nr_keys_before, $nr_keys_after) = (0,0);
@@ -198,7 +264,7 @@ sub do_maintenance($$)
         for my $key (@old_keys) { delete $db->{$key}; }
         $txn->txn_commit();
         
-        $self->mylog(2, "cleaning main database finished. before: $nr_keys_before, after: $nr_keys_after");
+        $self->mylog(1, "cleaning main database finished. before: $nr_keys_before, after: $nr_keys_after");
 
         if($self->{postgrey}{awl_clients}) {
             # cleanup clients auto-whitelist database
@@ -222,7 +288,7 @@ sub do_maintenance($$)
             for my $key (@old_keys_cawl) { delete $cawl_db->{$key}; }
             $txn->txn_commit();
 
-            $self->mylog(2, "cleaning clients database finished. before: $nr_keys_before, after: $nr_keys_after");
+            $self->mylog(1, "cleaning clients database finished. before: $nr_keys_before, after: $nr_keys_after");
         }
 
         $self->{postgrey}{last_maint_keys}=$now;
@@ -232,6 +298,9 @@ sub do_maintenance($$)
 sub is_new_instance($$)
 {
     my ($self, $inst) = @_;
+    return 1 if not defined $inst; # in case the 'instance' parameter
+                                   # was not supplied by the client (Exim)
+
     # we keep a list of the last 20 "instances", which identify unique messages
     # so that for example we only put one X-Greylist header per message.
     $self->{postgrey}{instances} = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
@@ -250,19 +319,36 @@ sub is_new_instance($$)
 # main routine: based on attributes specified as argument, return policy decision
 sub smtpd_access_policy($$)
 {
-    my ($self, $attr) = @_;
+    my ($self, $now, $attr) = @_;
     my $db  = $self->{postgrey}{db};
-    my $now = time();
+    # This attribute occurs in connections from the policy-test script,
+    # not in a regular postfix query connection
+    if(defined $attr->{policy_test_time}) { $now = $attr->{policy_test_time} }
 
     # whitelists
     for my $w (@{$self->{postgrey}{whitelist_clients}}) {
-        return 'DUNNO' if $attr->{client_name} =~ $w;
+        if($attr->{client_name} =~ $w) {
+            $self->mylog_action($attr, 'pass', 'client whitelist');
+            return 'DUNNO';
+        }
     }
     for my $w (@{$self->{postgrey}{whitelist_ips}}) {
-        return 'DUNNO' if $attr->{client_address} =~ $w;
+        if($attr->{client_address} =~ $w) {
+            $self->mylog_action($attr, 'pass', 'client whitelist');
+            return 'DUNNO';
+        }
+    }
+    for my $w (@{$self->{postgrey}{whitelist_cidr}}) {
+        if(cidr_match($w->[0], $w->[1], $attr->{client_address})) {
+            $self->mylog_action($attr, 'pass', 'client whitelist');
+            return 'DUNNO';
+        }
     }
     for my $w (@{$self->{postgrey}{whitelist_recipients}}) {
-        return 'DUNNO' if $attr->{recipient} =~ $w;
+        if($attr->{recipient} =~ $w) {
+            $self->mylog_action($attr, 'pass', 'recipient whitelist');
+            return 'DUNNO';
+        }
     }
 
     # auto whitelist clients (see below for explanation)
@@ -283,6 +369,7 @@ sub smtpd_access_policy($$)
                 $cawl_count++; # for statistics
                 $cawl_db->{$cawl_key}=$cawl_count.','.$now;
             }
+            $self->mylog_action($attr, 'pass', 'client AWL');
             return 'DUNNO';
         }
     }
@@ -324,13 +411,6 @@ sub smtpd_access_policy($$)
         $db->{$key}="$first,$now";
     }
 
-    # do maintenance if one hour has passed since the last one
-    if($now-$self->{postgrey}{last_maint} >= 3600) {
-        $self->{postgrey}{last_maint} = $now;
-        $self->do_maintenance($now);
-    }
-
-    $self->mylog(4, "request age ".($now - $first));
     my $diff = $self->{postgrey}{delay} - ($now - $first);
 
     # auto whitelist clients
@@ -346,7 +426,10 @@ sub smtpd_access_policy($$)
                 # ok, increase count
                 $cawl_count++;
                 $cawl_db->{$cawl_key}=$cawl_count.','.$now;
-                $self->mylog(2, "whitelisted: $attr->{client_name}")
+                my $client = $attr->{client_name} ?
+                    $attr->{client_name}.'['.$attr->{client_address}.']' :
+                    $attr->{client_address};
+                $self->mylog(1, "whitelisted: $client")
                     if $cawl_count==$self->{postgrey}{awl_clients};
             }
         }
@@ -355,24 +438,36 @@ sub smtpd_access_policy($$)
     # not enough waited? -> greylist
     if ($diff > 0 ) {
         my $msg = $self->{postgrey}{greylist_text};
+        # Workaround for an Exchange bug related to Greylisting:
+        # use DSN 4.2.0 instead of the default 4.7.1. This works
+        # only with Postfix 2.3 though and we know that Postfix >= 2.3
+        # always defines the etrn_domain attribute (is this really true and
+        # guaranteed in future versions? I don't know...)
+        $msg = '4.2.0 ' . $msg if defined $attr->{etrn_domain} and
+                          $msg !~ /^\d/;
         $msg =~ s/\%s/$diff/;
         my $recip_domain = $attr->{recipient}; $recip_domain =~ s/.*\@//;
         $msg =~ s/\%r/$recip_domain/;
+        $self->mylog_action($attr, 'greylist',
+            $now != $first ? "early-retry (${diff}s missing)" : "new"
+            );
         return "$self->{postgrey}{greylist_action} $msg";
     }
 
     # X-Greylist header:
     if(!$last_was_successful and $self->is_new_instance($attr->{instance})) {
         # syslog
-        my $client = $attr->{client_name} eq 'unknown' ? $attr->{client_address} : $attr->{client_name};
-        $self->mylog(2, "delayed ".($now-$first)." seconds: client=$client, from=$sender, to=$attr->{recipient}");
+        my $client = ($attr->{client_name} and $attr->{client_name} ne 'unknown') ?
+                     $attr->{client_name} : $attr->{client_address};
 
         # add X-Greylist header
         my $date = strftime("%a, %d %b %Y %T %Z", localtime);
+        $self->mylog_action($attr, 'pass', 'triplet found', 'delay='.($now-$first));
         return 'PREPEND X-Greylist: delayed '.($now-$first).
             " seconds by postgrey-$VERSION at $self->{postgrey}{hostname}; $date";
     }
 
+    $self->mylog_action($attr, 'pass', 'triplet found');
     return 'DUNNO';
 }
 
@@ -387,12 +482,13 @@ sub main()
     # parse options
     my %opt = ();
     GetOptions(\%opt, 'help|h', 'man', 'version', 'noaction|no-action|n',
-        'verbose|v', 'daemonize|d', 'unix|u=s', 'inet|i=s', 'user=s', 'group=s',
-        'dbdir=s', 'pidfile=s', 'delay=i', 'max-age=i',
+        'verbose|v', 'quiet|q', 'daemonize|d', 'unix|u=s', 'inet|i=s',
+        'user=s', 'group=s', 'dbdir=s', 'pidfile=s', 'delay=i', 'max-age=i',
         'lookup-by-subnet', 'lookup-by-host', 'auto-whitelist-clients:s', 
         'whitelist-clients=s@', 'whitelist-recipients=s@',
+        'syslogfacility|syslog-facility|facility=s',
         'retry-window=s', 'greylist-action=s', 'greylist-text=s', 'privacy',
-        'hostname=s', 'exim'
+        'hostname=s', 'exim', 'listen-queue-size=i'
     ) or exit(1);
     # note: lookup-by-subnet can be given for compatibility, but it is default
     # so do not do nothing with it...
@@ -434,6 +530,27 @@ sub main()
         $opt{dbdir} =~ /^(.*)$/; $opt{dbdir} = $1;
     }
 
+    # determine proper "logsock" for Sys::Syslog
+    my $syslog_logsock;
+    if(defined $Sys::Syslog::VERSION and $Sys::Syslog::VERSION ge '0.15'
+    and defined $Net::Server::VERSION and $Net::Server::VERSION ge '0.97') {
+        # use 'native' when Sys::Syslog >= 0.15
+        $syslog_logsock = 'native';
+    }
+    elsif($^O eq 'solaris') {
+        # 'stream' is broken and 'unix' doesn't work on Solaris: only 'inet'
+        # seems to be useable with Sys::Syslog < 0.15
+        $syslog_logsock = 'inet';
+    }
+    else {
+        $syslog_logsock = 'unix';
+    }
+
+    # Workaround: Net::Server doesn't allow for a value of 'listen' higher than 999
+    if(defined $opt{'listen-queue-size'} and $opt{'listen-queue-size'} > 999) {
+        $opt{'listen-queue-size'} = 999;
+    }
+
     # create Net::Server object and run it
     my $server = bless {
         server => {
@@ -442,18 +559,18 @@ sub main()
             proto            => $opt{inet} ? 'tcp' : 'unix',
             user             => $opt{user} || 'postgrey',
             group            => $opt{group} || 'postgrey',
-            dbdir            => $opt{dbdir} || '/var/lib/postgrey',
+            dbdir            => $opt{dbdir} || $DEFAULT_DBDIR,
             setsid           => $opt{daemonize} ? 1 : undef,
             pid_file         => $opt{daemonize} ? $opt{pidfile} : undef,
-            log_level        => $opt{verbose} ? 4 : 2,
+            log_level        => $opt{quiet} ? 1 : ($opt{verbose} ? 3 : 2),
             log_file         => $opt{daemonize} ? 'Sys::Syslog' : undef,
-            syslog_logsock   => $^O eq 'solaris' ? 'inet' : 'unix',
-            syslog_facility  => 'mail',
+            syslog_logsock   => $syslog_logsock,
+            syslog_facility  => $opt{syslogfacility} || 'mail',
             syslog_ident     => 'postgrey',
+            listen           => $opt{'listen-queue-size'} ? $opt{'listen-queue-size'} : undef,
         },
         postgrey => {
             delay            => $opt{delay}     || 300,
-            dbdir            => $opt{dbdir}     || '/var/lib/postgrey',
             max_age          => $opt{'max-age'} || 35,
             last_maint       => time,
             last_maint_keys  => 0, # do it on the first night
@@ -463,13 +580,13 @@ sub main()
                     $opt{'auto-whitelist-clients'} : 5) : 5,
             retry_window     => $retry_window,
             greylist_action  => $opt{'greylist-action'} || 'DEFER_IF_PERMIT',
-            greylist_text    => $opt{'greylist-text'} || 'Greylisted, see http://isg.ee.ethz.ch/tools/postgrey/help/%r.html',
+            greylist_text    => $opt{'greylist-text'} || 'Greylisted, see http://postgrey.schweikert.ch/help/%r.html',
             whitelist_clients_files    => $opt{'whitelist-clients'} ||
-                [ '/etc/postgrey/whitelist_clients' ,
-                  '/etc/postgrey/whitelist_clients.local' ],
+                [ "$CONFIG_DIR/whitelist_clients" ,
+                  "$CONFIG_DIR/whitelist_clients.local" ],
             whitelist_recipients_files => $opt{'whitelist-recipients'} ||
-                [ '/etc/postgrey/whitelist_recipients' ,
-                  '/etc/postgrey/whitelist_recipients.local' ],
+                [ "$CONFIG_DIR/whitelist_recipients" ,
+                  "$CONFIG_DIR/whitelist_recipients.local" ],
             privacy => defined $opt{'privacy'},
             hostname => defined $opt{hostname} ? $opt{hostname} : hostname,
             exim => defined $opt{'exim'},
@@ -490,6 +607,10 @@ sub main()
 
     $0 = join(' ', @{$server->{server}{commandline}});
     $server->run;
+
+    # shouldn't get here
+    $server->mylog(1, "Exiting!");
+    exit 1;
 }
 
 ##### Net::Server::Multiplex methods:
@@ -497,33 +618,38 @@ sub main()
 # reload whitelists on HUP
 sub sig_hup {
     my $self = shift;
-    $self->mylog(2, "HUP received: reloading whitelists...");
+    $self->mylog(1, "HUP received: reloading whitelists...");
     $self->read_clients_whitelists();
     $self->read_recipients_whitelists();
+}
+
+sub post_bind_hook()
+{
+    my ($self) = @_;
+
+    # unix socket permissions should be 666
+    if($self->{server}{port}[0] =~ /^(.*)\|unix$/) {
+        chmod 0666, $1;
+    }
 }
 
 sub pre_loop_hook()
 {
     my ($self) = @_;
 
+    # be sure to put in syslog any warnings / fatal errors
+    if($self->{server}{log_file} eq 'Sys::Syslog') {
+        $SIG{__WARN__} = sub { Sys::Syslog::syslog('warning', '%s', "WARNING: $_[0]") };
+        $SIG{__DIE__}  = sub { Sys::Syslog::syslog('crit', '%s', "FATAL: $_[0]"); die @_; };
+    }
+
     # write files with mode 600
     umask 0077;
-
-    # unix socket permissions should be 666
-    if($self->{server}{port}[0] =~ /^(.*)\|unix$/) {
-        chmod 0666, $1;
-    }
 
     # ensure that only one instance of postgrey is running
     my $lock = "$self->{server}{dbdir}/postgrey.lock";
     open(LOCK, ">>$lock") or die "ERROR: can't open lock file: $lock\n";
     flock(LOCK, LOCK_EX|LOCK_NB) or die "ERROR: locked: $lock\n";
-
-    # be sure to put in syslog any warnings / fatal errors
-    if($self->{server}{log_file} eq 'Sys::Syslog') {
-        $SIG{__WARN__} = sub { Sys::Syslog::syslog('warning', '%s', "warning: $_[0]") };
-        $SIG{__DIE__}  = sub { Sys::Syslog::syslog('crit', '%s', "fatal: $_[0]"); die @_; };
-    }
 
     # my $setflags = DB_TXN_NOSYNC;
     my $setflags = 0; # see http://bugs.debian.org/334430
@@ -531,7 +657,7 @@ sub pre_loop_hook()
         $setflags |= BerkeleyDB::DB_AUTO_COMMIT;
     }
     else {
-        warn "WARNING: disabling DB_AUTO_COMMIT because you are using BerkeleyDB version $BerkeleyDB::db_version. Version 4.1 is required for DB_AUTO_COMMIT. You might have problems in case of system failures to recover the database.\n";
+        warn "disabling DB_AUTO_COMMIT because you are using BerkeleyDB version $BerkeleyDB::db_version. Version 4.1 is required for DB_AUTO_COMMIT. You might have problems in case of system failures to recover the database.\n";
     }
 
     # open database with transactions, logging and auto-commit to make it as
@@ -541,7 +667,8 @@ sub pre_loop_hook()
         -Home     => $self->{server}{dbdir},
         -Flags    => DB_CREATE|DB_RECOVER|DB_INIT_TXN|DB_INIT_MPOOL|DB_INIT_LOG,
         -SetFlags => $setflags,
-    ) or die "ERROR: can't create DB environment: $!\n";
+    ) or die "ERROR: can't create DB environment: $! (" .
+             "dbdir: ".$self->{server}{dbdir}." uid/gid: $<,$>)\n";
 
     $self->{postgrey}{db_obj} = tie(%{$self->{postgrey}{db}}, 'BerkeleyDB::Btree',
         -Filename => 'postgrey.db',
@@ -575,20 +702,26 @@ sub mux_input()
         elsif($in eq '') {
             defined $attr->{request} or $attr->{request}='';
             if($attr->{request} ne 'smtpd_access_policy') {
-                $self->{net_server}->mylog(2, "unrecognized request type: '$attr->{request}'");
+                $self->{net_server}->mylog(0, "unrecognized request type: '$attr->{request}'");
             }
             else {
+                my $now = time;
+
                 # decide
-                my $action = $self->{net_server}->smtpd_access_policy($attr);
-                # debug
-                if($self->{net_server}{server}{log_level}>=4) {
-                    my $a = 'request: ';
-                    $a .= join(' ', map {"$_=$attr->{$_}"} (sort keys %$attr));
-                    $a .= " action=$action";
-                    $self->{net_server}->mylog(4, $a);
-                }
+                my $action = $self->{net_server}->smtpd_access_policy($now, $attr);
+
                 # give answer
                 print $fh "action=$action\n\n";
+
+                # attempt maintenance if one hour has passed since the last one
+                my $server = $self->{net_server};
+                if($server->{postgrey}{last_maint} && 
+                    $now-$server->{postgrey}{last_maint} >= 3600)
+                {
+                    $server->{postgrey}{last_maint} = $now;
+                    $server->do_maintenance($now);
+                }
+
                 # close the filehandle if --exim is set
                 if ($self->{net_server}->{postgrey}{exim}) {
                     close($fh);
@@ -598,9 +731,18 @@ sub mux_input()
             $self->{postgrey_attr} = {};
         }
         else {
-            $self->{net_server}->mylog(2, "ignoring garbage: <".substr($in, 0, 100).">");
+            $self->{net_server}->mylog(1, "ignoring garbage: <".substr($in, 0, 100).">");
         }
     }
+}
+
+sub fatal_hook()
+{
+    my ($self, $error, $package, $file, $line) = @_;
+    # Net::Server calls $self->server_close but, unfortunately,
+    # it does exit(0) (with Net::Server 0.97)...
+    # It is however useful for init-script to detect non-zero exit codes
+    die('ERROR: ' . $error);
 }
 
 main;
@@ -618,7 +760,8 @@ B<postgrey> [I<options>...]
  -h, --help              display this help and exit
      --version           output version information and exit
  -v, --verbose           increase verbosity level
-
+     --syslog-facility   Syslog facility to use (default mail)
+ -q, --quiet             decrease verbosity level
  -u, --unix=PATH         listen on unix socket PATH
  -i, --inet=[HOST:]PORT  listen on PORT, localhost if HOST is not specified
  -d, --daemonize         run in the background
@@ -636,15 +779,16 @@ B<postgrey> [I<options>...]
                          (default: Greylisted + help url, see below)
      --lookup-by-subnet  strip the last 8 bits from IP addresses (default)
      --lookup-by-host    do not strip the last 8 bits from IP addresses
-     --whitelist-clients=FILE     default: /etc/postgrey/whitelist_clients
-     --whitelist-recipients=FILE  default: /etc/postgrey/whitelist_recipients
-     --auto-whitelist-clients=N   whitelist host after first successful delievery
-                                  N is the minimal count of mails before a client is 
-                                  whitelisted (turned on by default with value 5)
-                                  specify N=0 to disable.
      --privacy           store data using one-way hash functions
      --hostname=NAME     set the hostname (default: `hostname`)
      --exim              don't reuse a socket for more than one query (exim compatible)
+     --whitelist-clients=FILE     default: /etc/postgrey/whitelist_clients
+     --whitelist-recipients=FILE  default: /etc/postgrey/whitelist_recipients
+     --auto-whitelist-clients=N   whitelist host after first successful delivery
+                                  N is the minimal count of mails before a client is 
+                                  whitelisted (turned on by default with value 5)
+                                  specify N=0 to disable.
+     --listen-queue-size=N        allow for N waiting connections to our socket
 
  Note that the --whitelist-x options can be specified multiple times,
  and that per default /etc/postgrey/whitelist_clients.local and
@@ -754,6 +898,10 @@ C<domain.addr> domain and subdomains.
 IP address IP1.IP2.IP3.IP4. You can also leave off one number, in
 which case only the first specified numbers will be checked.
 
+=item IP1.IP2.IP3.IP4/MASK
+
+CIDR-syle network. Example: 192.168.1.0/24
+
 =item /regexp/
 
 anything that matches C<regexp> (the full address is matched).
@@ -798,7 +946,7 @@ allowed.
 When a message is greylisted, an error message like this will be sent at the
 SMTP-level:
 
- Greylisted, see http://isg.ee.ethz.ch/tools/postgrey/help/example.com.html
+ Greylisted, see http://postgrey.schweikert.ch/help/example.com.html
 
 Usually no user should see that error message and the idea of that URL is to
 provide some help to system administrators seeing that message or users of
@@ -836,7 +984,8 @@ for a description of how Postfix policy servers work.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004-2006 by ETH Zurich. All rights reserved.
+Copyright (c) 2004-2007 by ETH Zurich. All rights reserved.
+Copyright (c) 2007 by Open Systems AG. All rights reserved.
 
 =head1 LICENSE
 
@@ -856,21 +1005,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 =head1 AUTHOR
 
-S<David Schweikert E<lt>dws@ee.ethz.chE<gt>>
-
-=head1 HISTORY
-
- 2004-05-20 ds Initial Version
+S<David Schweikert E<lt>david@schweikert.chE<gt>>
 
 =cut
 
-# Emacs Configuration
-#
-# Local Variables:
-# mode: cperl
-# eval: (cperl-set-style "PerlStyle")
-# mode: flyspell
-# mode: flyspell-prog
-# End:
-#
 # vi: sw=4 et

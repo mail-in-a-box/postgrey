@@ -21,6 +21,10 @@ See POD documentation in postgrey. Execute:
 
   man postgrey
 
+See also Postgrey's homepage:
+
+  http://postgrey.schweikert.ch/
+
 
 Mailing-List and getting Help
 -----------------------------
@@ -33,4 +37,4 @@ subject 'subscribe' to:
   
 There is also a mailing-list archive, where you might find answers:
 
-  http://www.ee.ethz.ch/~slist/postgrey/
+  http://lists.ee.ethz.ch/postgrey

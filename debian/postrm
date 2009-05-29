@@ -15,6 +15,7 @@ case "$1" in
                 /var/lib/postgrey/log.*     \
                 /var/lib/postgrey/postgrey*
             rmdir /var/lib/postgrey || true
+            # clean up from 1.31-2 and older
             dpkg-statoverride --remove /var/lib/postgrey || true
         fi
 

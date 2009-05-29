@@ -14,19 +14,15 @@ case "$1" in
         getent group postgrey > /dev/null || \
             addgroup --system postgrey
 
-        if [ ! -e "$DBDIR" ]; then
-            mkdir -p "$DBDIR"
-            dpkg-statoverride --update --add \
-                postgrey postgrey 0700 "$DBDIR"
-        fi
+        install -d -o postgrey -g postgrey -m 0700 "$DBDIR"
 
-       ucf --three-way \
+        ucf --three-way \
             /usr/share/postgrey/whitelist_clients \
             /etc/postgrey/whitelist_clients
-       ucf --three-way \
+        ucf --three-way \
             /usr/share/postgrey/whitelist_recipients \
             /etc/postgrey/whitelist_recipients
-       ucf --three-way \
+        ucf --three-way \
             /usr/share/postgrey/postgrey-default \
             /etc/default/postgrey
     ;;

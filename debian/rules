@@ -28,6 +28,7 @@ install: build
 
 	# for lack of an upstream Makefile
 	install -D postgrey $(BASE)/usr/sbin/postgrey
+	install -D policy-test $(BASE)/usr/sbin/policy-test
 	install -D contrib/postgreyreport $(BASE)/usr/bin/postgreyreport
 	install -m 0644 -D postgrey_whitelist_clients \
 		$(BASE)/usr/share/postgrey/whitelist_clients
@@ -41,8 +42,12 @@ install: build
 		$(BASE)/usr/share/postgrey/whitelist_recipients.md5sum
 	install -m 0644 -D debian/postgrey-default.md5sum \
 		$(BASE)/usr/share/postgrey/postgrey-default.md5sum
-	mkdir -p $(BASE)/usr/share/man/man{1,8}
+	mkdir -p $(BASE)/usr/share/man/man1
+	mkdir -p $(BASE)/usr/share/man/man8
+
 	pod2man --section=8 postgrey > $(BASE)/usr/share/man/man8/postgrey.8
+	pod2man --section=8 policy-test \
+		> $(BASE)/usr/share/man/man8/policy-test.8
 	pod2man --section=1 contrib/postgreyreport \
 		> $(BASE)/usr/share/man/man1/postgreyreport.1
 

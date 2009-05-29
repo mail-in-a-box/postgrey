@@ -1,3 +1,40 @@
+* 2007-09-06: version 1.31
+
+   - support CIDR-style addresses in the client whitelist (Claudio Strizzolo)
+   - improve logging of unresolveable hosts (Adrian von Bidder, Heiko
+     Schlichting)
+   - updated whitelist
+   - fix unix socket permission issues (Martin F Krafft, Adrian von Bidder,
+     Leos Bitto, Debian bug #376910)
+   - fix regexps for matching hosts in whitelists (Antonello Nocchi)
+   - do maintenance after the current request and not before (Clifton Royston)
+
+* 2007-08-02: version 1.30
+
+   - implemented --listen-queue-size option (you usually don't need to set it
+     except for big sites).
+   - small fix to the 'native' syslogging implemented in 1.29
+
+* 2007-07-23: version 1.29
+
+   - workaround for a possible crash with Sys::Syslog < 0.15 when syslog
+     messages were generated during syslog file rotation
+   - use the 'native' logging socket with Sys::Syslog >= 0.15 (Philipp Koller)
+ 
+* 2007-06-21: version 1.28
+
+   - improved logging (postgrey is now more verbose, use the new --quiet
+     option if that bothers you)
+   - improved Exim support (see Debian bug #380257)
+   - workaround for a bug in Exchange dealing with temporary failures
+     (use DSN code 4.2.0 instead of the default 4.7.1)
+   - added 'policy-test' script for testing postgrey's performance or pre-seeding
+     the database
+   - fix logging of delayed, unresolveable clients in syslog (Andreas Metzler)
+   - more descriptive error message on DB failure (Adrian von Bidder)
+   - updated whitelist
+   - new homepage: http://postgrey.schweikert.ch/
+
 * 2006-07-17: version 1.27
 
    - fix socket permissions with Net::Server >= 0.94 (Leos Bitto)
@@ -45,7 +82,8 @@
 
 * 2005-04-14: version 1.21
 
-   Security: this release fixes a remotely exploitable DoS vulnerability.
+   Security: this release fixes a remotely exploitable DoS vulnerability
+   (CVE-2005-1127)
 
    - fix crash with '%' in sender addresses (Stefan Schmidt)
    - fix other users of unchecked strings with syslog/printf (Peter Bieringer)

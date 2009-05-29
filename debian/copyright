@@ -1,12 +1,13 @@
 This Debian package was prepared by Adrian von Bidder <cmot@debian.org> in
 July 2004.
 
-It was downloaded from http://isg.ee.ethz.ch/tools/postgrey/
+It was downloaded from http://postgrey.schweikert.ch/
 
-Upstream Author: David Schweikert <dws@ee.ethz.ch>
+Upstream Author: David Schweikert <david_AT_schweikert.ch>
                  postgreyreport by tbaker@bakerfl.org
 
-Copyright: postgrey is copyright © 2004-2005 ETH Zürich
+Copyright: postgrey is copyright © 2004-2006 ETH Zürich
+                                 © 2007 Open Systems AG, Switzerland
            postgreyreport is copyright © 2004 tbaker@bakerfl.org
 
 License:
