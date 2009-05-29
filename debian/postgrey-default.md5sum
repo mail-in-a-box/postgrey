@@ -2,3 +2,5 @@ a70914f5b41e93bd2e6359c2d8ce1da2  1.13-3/debian/postgrey.default
 61a9e63d0d924572069f3cc8945d4553  1.14-1/debian/postgrey.default
 e4cd64e57fad00de19c2f322063aefc6  1.18-1/debian/postgrey.default
 066c132146f55fcb33496ea116f000f8  1.28-1/debian/postgrey-default
+2eda3737596b2a631b3a08270fbc0c0f  1.32-1/debian/postgrey-default
+8010045560915e38bf8fc216d1e2b678  1.32-2/debian/postgrey-default

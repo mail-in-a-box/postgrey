@@ -12,7 +12,7 @@ able to talk to the Postgrey daemon, which we can do in an acl_smtp_rcpt ACL
 in Exim's config file:
 
  defer log_message = greylisted host $sender_host_address
-       set acl_m0  = request=smtpd_access_policy\nprotocol_state=RCPT\nprotocol_name=${uc:$received_protocol}\nhelo_name=$sender_helo_name\nclient_address=$sender_host_address\nclient_name=$sender_host_name\nsender=$sender_address\nrecipient=$local_part@$domain\ninstance=$sender_host_address/$sender_address/$local_part@$domain\n\n
+       set acl_m0  = request=smtpd_access_policy\nprotocol_state=RCPT\nprotocol_name=${uc:$received_protocol}\nhelo_name=$sender_helo_name\nclient_address=$sender_host_address\nclient_name=$sender_host_name\nsender=$sender_address\nrecipient=$local_part@$domain\n\n
        set acl_m0  = ${sg{${readsocket{/var/run/postgrey}{$acl_m0}{5s}{}{action=DUNNO}}}{action=}{}}
        message     = ${sg{$acl_m0}{^\\w+\\s*}{}}
        condition   = ${if eq{${uc:${substr{0}{5}{$acl_m0}}}}{DEFER}{true}{false}}

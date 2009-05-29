@@ -1,6 +1,6 @@
 # postgrey whitelist for mail recipients
 # --------------------------------------
-# put this file in /etc/postgrey or specify its path
+# put this file in /etc/postfix or specify its path
 # with --whitelist-recipients=xxx
 
 postmaster@

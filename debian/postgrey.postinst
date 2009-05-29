@@ -3,6 +3,9 @@
 
 set -e
 
+# lintian: postinst-does-not-load-confmodule
+. /usr/share/debconf/confmodule
+
 case "$1" in
     configure)
         DBDIR='/var/lib/postgrey'
@@ -16,13 +19,13 @@ case "$1" in
 
         install -d -o postgrey -g postgrey -m 0700 "$DBDIR"
 
-        ucf --three-way \
+        ucf --debconf-ok --three-way \
             /usr/share/postgrey/whitelist_clients \
             /etc/postgrey/whitelist_clients
-        ucf --three-way \
+        ucf --debconf-ok --debconf-ok --three-way \
             /usr/share/postgrey/whitelist_recipients \
             /etc/postgrey/whitelist_recipients
-        ucf --three-way \
+        ucf --debconf-ok --three-way \
             /usr/share/postgrey/postgrey-default \
             /etc/default/postgrey
     ;;
@@ -38,5 +41,8 @@ case "$1" in
 esac
 
 #DEBHELPER#
+
+# without this, debconf hangs after end of postinst.
+db_stop
 
 exit 0

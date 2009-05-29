@@ -1,8 +1,31 @@
+postgrey (1.32-3) unstable; urgency=low
+
+  * debconf warning of the port change.
+    (Seems NEWS.Debian is not enough.  closes: #506122)
+
+ -- Adrian von Bidder <cmot@debian.org>  Fri, 27 Feb 2009 22:07:24 +0100
+
+postgrey (1.32-2) unstable; urgency=low
+
+  * Should test with the config file as shipped. (closes: #504343, #504667)
+  * Widened google whitelist entry (closes: #504382)
+
+ -- Adrian von Bidder <cmot@debian.org>  Fri, 07 Nov 2008 16:50:38 +0100
+
+postgrey (1.32-1) unstable; urgency=low
+
+  * New upstream version
+    - syslog facility patch now included upstream
+  * Completely new packaging (move from svn to hg)
+  * Change the default port from 60000 to postgrey's default 10023.
+
+ -- Adrian von Bidder <cmot@debian.org>  Thu, 30 Oct 2008 11:16:51 +0100
+
 postgrey (1.31-3) unstable; urgency=low
 
   * added eBay whitelist entry (reported by peterS)
   * fix recipient whitelist (closes: #487485)
-  * admin that I don't know how postfix generetes queue ids (closes: #480778)
+  * admit that I don't know how postfix generates queue ids (closes: #480778)
   * allow specifying the syslog facility to report to (closes: #446489)
   * include changes from NMU and kill the statoverride, thanks Marcin
 

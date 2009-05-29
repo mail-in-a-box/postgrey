@@ -1,3 +1,11 @@
+postgrey (1.32-1) unstable; urgency=low
+
+  Postgrey is now listening to port 10023 and not 60000.  The latter was an
+  unnecessary Debian specific modification.  You will need to adjust your
+  configuration (usually /etc/postfix/main.cf) accordingly.
+
+ -- Adrian von Bidder <cmot@debian.org>  Thu, 30 Oct 2008 10:58:37 +0100
+
 postgrey (1.17-1) unstable; urgency=low
 
   This version of postgrey introduces the --auto-whitelist-clients option

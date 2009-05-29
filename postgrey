@@ -22,9 +22,9 @@ use POSIX qw(strftime setlocale LC_ALL);
 use vars qw(@ISA);
 @ISA = qw(Net::Server::Multiplex);
 
-my $VERSION = '1.31';
-my $DEFAULT_DBDIR = '/var/lib/postgrey';
-my $CONFIG_DIR = '/etc/postgrey';
+my $VERSION = '1.32';
+my $DEFAULT_DBDIR = '/var/spool/postfix/postgrey';
+my $CONFIG_DIR = '/etc/postfix';
 
 sub cidr_parse($)
 {
@@ -146,6 +146,23 @@ sub do_sender_substitutions($$)
 
     my ($user, $domain) = split(/@/, $addr, 2);
     defined $domain or return $addr;
+
+    # BATV is defined as prvs=tag-val=loc-core@, but sometimes shows up
+    # as prvs=loc-core=tag-val@...
+    if ($user =~ /^prvs=/) {
+	my @a = split(/=/, $user);
+	if ($#a == 2) {
+	    if ($a[1] =~ /^[0-9a-z]{10}/ && $a[2] !~ /^[0-9a-z]{10}/) {
+		$user = $a[2];
+	    } elsif ($a[2] =~ /^[0-9a-z]{10}/ && $a[1] !~ /^[0-9a-z]{10}/) {
+		$user = $a[1];
+	    } else {
+		# throw a coin, pick the standard
+		$user = $a[2];
+	    }
+	}
+    }
+
     # strip extension, used sometimes for mailing-list VERP
     $user =~ s/\+.*//;
     # replace numbers in VERP addresses with '#' so that
@@ -558,7 +575,7 @@ sub main()
             port             => [ $opt{inet} ? $opt{inet} : $opt{unix}."|unix" ],
             proto            => $opt{inet} ? 'tcp' : 'unix',
             user             => $opt{user} || 'postgrey',
-            group            => $opt{group} || 'postgrey',
+            group            => $opt{group} || 'nogroup',
             dbdir            => $opt{dbdir} || $DEFAULT_DBDIR,
             setsid           => $opt{daemonize} ? 1 : undef,
             pid_file         => $opt{daemonize} ? $opt{pidfile} : undef,
@@ -582,11 +599,10 @@ sub main()
             greylist_action  => $opt{'greylist-action'} || 'DEFER_IF_PERMIT',
             greylist_text    => $opt{'greylist-text'} || 'Greylisted, see http://postgrey.schweikert.ch/help/%r.html',
             whitelist_clients_files    => $opt{'whitelist-clients'} ||
-                [ "$CONFIG_DIR/whitelist_clients" ,
-                  "$CONFIG_DIR/whitelist_clients.local" ],
+                [ "$CONFIG_DIR/postgrey_whitelist_clients" ,
+                  "$CONFIG_DIR/postgrey_whitelist_clients.local" ],
             whitelist_recipients_files => $opt{'whitelist-recipients'} ||
-                [ "$CONFIG_DIR/whitelist_recipients" ,
-                  "$CONFIG_DIR/whitelist_recipients.local" ],
+                [ "$CONFIG_DIR/postgrey_whitelist_recipients" ],
             privacy => defined $opt{'privacy'},
             hostname => defined $opt{hostname} ? $opt{hostname} : hostname,
             exim => defined $opt{'exim'},
@@ -767,8 +783,8 @@ B<postgrey> [I<options>...]
  -d, --daemonize         run in the background
      --pidfile=PATH      put daemon pid into this file
      --user=USER         run as USER (default: postgrey)
-     --group=GROUP       run as group GROUP (default: postgrey)
-     --dbdir=PATH        put db files in PATH (default: /var/lib/postgrey)
+     --group=GROUP       run as group GROUP (default: nogroup)
+     --dbdir=PATH        put db files in PATH (default: /var/spool/postfix/postgrey)
      --delay=N           greylist for N seconds (default: 300)
      --max-age=N         delete entries older than N days since the last time
                          that they have been seen (default: 35)
@@ -782,8 +798,8 @@ B<postgrey> [I<options>...]
      --privacy           store data using one-way hash functions
      --hostname=NAME     set the hostname (default: `hostname`)
      --exim              don't reuse a socket for more than one query (exim compatible)
-     --whitelist-clients=FILE     default: /etc/postgrey/whitelist_clients
-     --whitelist-recipients=FILE  default: /etc/postgrey/whitelist_recipients
+     --whitelist-clients=FILE     default: /etc/postfix/postgrey_whitelist_clients
+     --whitelist-recipients=FILE  default: /etc/postfix/postgrey_whitelist_recipients
      --auto-whitelist-clients=N   whitelist host after first successful delivery
                                   N is the minimal count of mails before a client is 
                                   whitelisted (turned on by default with value 5)
@@ -791,9 +807,8 @@ B<postgrey> [I<options>...]
      --listen-queue-size=N        allow for N waiting connections to our socket
 
  Note that the --whitelist-x options can be specified multiple times,
- and that per default /etc/postgrey/whitelist_clients.local and
- /etc/postgrey/whitelist_recipients.local are also read, so that you can put
- there local entries.
+ and that per default /etc/postfix/postgrey_whitelist_clients.local is
+ also read, so that you can put there local entries.
 
 =head1 DESCRIPTION
 
@@ -819,13 +834,13 @@ doing lookups in the database.
 =item *
 
 Create a C<postgrey> user and the directory where to put the database I<dbdir>
-(default: C</var/lib/postgrey>)
+(default: C</var/spool/postfix/postgrey>)
 
 =item *
 
 Write an init script to start postgrey at boot and start it. Like this for example:
 
- postgrey --inet=60000 -d
+ postgrey --inet=10023 -d
 
 =item *
 
@@ -835,16 +850,16 @@ Put something like this in /etc/main.cf:
                permit_mynetworks
                ...
                reject_unauth_destination
-               check_policy_service inet:127.0.0.1:60000
+               check_policy_service inet:127.0.0.1:10023
 
 =item *
 
-Install the provided whitelist_clients and whitelist_recipients in
-/etc/postgrey.
+Install the provided postgrey_whitelist_clients and
+postgrey_whitelist_recipients in /etc/postfix.
 
 =item *
 
-Put in /etc/postgrey/whitelist_recipients users that do not want
+Put in /etc/postfix/postgrey_whitelist_recipients users that do not want
 greylisting.
 
 =back
@@ -855,10 +870,9 @@ Whitelists allow you to specify client addresses or recipient address, for
 which no greylisting should be done. Per default postgrey will read the
 following files:
 
- /etc/postgrey/whitelist_clients
- /etc/postgrey/whitelist_clients.local
- /etc/postgrey/whitelist_recipients
- /etc/postgrey/whitelist_recipients.local
+ /etc/postfix/postgrey_whitelist_clients
+ /etc/postfix/postgrey_whitelist_clients.local
+ /etc/postfix/postgrey_whitelist_recipients
 
 You can specify alternative paths with the --whitelist-x options.
 

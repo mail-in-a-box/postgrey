@@ -1,19 +1,10 @@
 # postgrey whitelist for mail client hostnames
 # --------------------------------------------
-# put this file in /etc/postgrey or specify its path
+# put this file in /etc/postfix or specify its path
 # with --whitelist-clients=xxx
-
-# Debian-specific additions
-# I *know* they run real mail queues, so greylisting only creates
-# bigger load for them.
-debconf.org
-debian.org
-spi-inc.org
 
 # greylisting.org: Southwest Airlines (unique sender, no retry)
 southwest.com
-# greylisting.org: Yahoo Groups servers (no retry)
-scd.yahoo.com
 # greylisting.org: isp.belgacom.be (wierd retry pattern)
 isp.belgacom.be
 # greylisting.org: Ameritrade (no retry)
@@ -185,5 +176,19 @@ lists.sourceforge.net
 polytec.de
 # 2007-09-06: qualiflow.com (no retry, reported by Alex Beckert)
 /^mail\d+\.msg\.oleane\.net$/
-# 2008-07-18: large pool, reported by Peter Samuelson
-/^mxphxpool\d+\.ebay\.com$/
+# 2007-09-07: nrl.navy.mil (no retry, reported by Axel Beckert)
+nrl.navy.mil
+# 2007-10-18: aliplast.com (long retry, reported by Johannes Feigl)
+mail.aliplast.com
+# 2007-10-18: inode.at (long retry, reported by Johannes Feigl)
+/^mx\d+\..*\.inode\.at$/
+# 2008-02-01: bol.com (no retry, reported by Frank Breedijk)
+/^.*?.server.arvato-systems.de$/
+# 2008-06-05: registeredsite.com (no retry, reported by Fred Kilbourn)
+/^(?:mail|fallback-mx)\d+.atl.registeredsite.com$/
+# 2008-07-17: mahidol.ac.th (no retry, reported by Alex Beckert)
+saturn.mahidol.ac.th
+# 2008-07-18: ebay.com (big pool, reported by Peter Samuelson)
+ebay.com
+# 2008-07-22: yahoo.com (big pool, reported by Juan Alonso)
+yahoo.com
