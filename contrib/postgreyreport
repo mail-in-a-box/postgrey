@@ -24,7 +24,7 @@ select((select(STDOUT), $| = 1)[0]); 	# Unbuffer standard output.
 # default options, override via command line
 my %opt = ( 	
 	user 			=> 'postgrey',
-	dbdir 			=> '/var/spool/postfix/postgrey',
+	dbdir 			=> '/var/lib/postgrey',
 	delay			=> 300,
 	return_string		=> 'Greylisted',	# match on this string
 
@@ -583,7 +583,7 @@ B<postgreyreport> [I<options>...]
      --version		      display version and exit
 
      --user=USER              run as USER (default: postgrey)
-     --dbdir=PATH             find db files in PATH (default: /var/spool/postfix/postgrey)
+     --dbdir=PATH             find db files in PATH (default: /var/lib/postgrey)
      --delay=N                report triplets that did not try again after N seconds (default: 300)
      --greylist-text=TXT      text to match on for greylist maillog lines
 

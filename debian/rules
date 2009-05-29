@@ -1,0 +1,69 @@
+#!/usr/bin/make -f
+# dh_make-originated rules file
+# ©2004,2005 Adrian von Bidder
+# Distribute and/or modify at will.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# installation base directory
+BASE=$(CURDIR)/debian/postgrey
+
+build: build-stamp
+
+build-stamp:
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs etc/postgrey
+
+	# for lack of an upstream Makefile
+	install -D postgrey $(BASE)/usr/sbin/postgrey
+	install -D contrib/postgreyreport $(BASE)/usr/bin/postgreyreport
+	install -m 0644 -D postgrey_whitelist_clients \
+		$(BASE)/usr/share/postgrey/whitelist_clients
+	install -m 0644 -D postgrey_whitelist_recipients \
+		$(BASE)/usr/share/postgrey/whitelist_recipients
+	install -m 0644 -D debian/postgrey-default \
+		$(BASE)/usr/share/postgrey/postgrey-default
+	install -m 0644 -D debian/postgrey_whitelist_clients.md5sum \
+		$(BASE)/usr/share/postgrey/whitelist_clients.md5sum
+	install -m 0644 -D debian/postgrey_whitelist_recipients.md5sum \
+		$(BASE)/usr/share/postgrey/whitelist_recipients.md5sum
+	install -m 0644 -D debian/postgrey-default.md5sum \
+		$(BASE)/usr/share/postgrey/postgrey-default.md5sum
+	mkdir -p $(BASE)/usr/share/man/man{1,8}
+	pod2man --section=8 postgrey > $(BASE)/usr/share/man/man8/postgrey.8
+	pod2man --section=1 contrib/postgreyreport \
+		> $(BASE)/usr/share/man/man1/postgreyreport.1
+
+# Build architecture-dependent files here.
+binary-arch: build install
+# arch:all package!
+
+# Build architecture-dependent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs Changes
+	dh_installlogcheck
+	dh_installdocs contrib/postgrey_clients_dump README.exim
+	dh_installinit -- defaults 19
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

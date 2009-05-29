@@ -1,0 +1,20 @@
+postgrey (1.17-1) unstable; urgency=low
+
+  This version of postgrey introduces the --auto-whitelist-clients option
+  (enabled by default, use --auto-whitelist-clients=0 to disable):  after
+  several (5 by default) emails from a client have passed through regular
+  greylisting, it is assumed that this client is a legitimate source of
+  email and is added to the whitelist:  further emails from the same client
+  are not subject to greylisting.
+
+ -- Adrian von Bidder <avbidder@fortytwo.ch>  Tue, 13 Dec 2004 11:33:26 +0100
+
+postgrey (1.14-1) unstable; urgency=low
+
+  With 1.14, the default is now --lookup-by-subnet, so you have to specify
+  --lookup-by-host to get the old behaviour.  Because of this, some entries
+  were deleted from /etc/postgrey/whitelist_clients.
+
+  Also, the --max-age default was changed from 14 to 30 days.
+
+ -- Adrian von Bidder <avbidder@fortytwo.ch>  Tue, 13 Jul 2004 14:03:36 +0200

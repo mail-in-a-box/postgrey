@@ -1,0 +1,46 @@
+#! /bin/sh
+# postinst script for postgrey
+
+set -e
+
+case "$1" in
+    configure)
+        DBDIR='/var/lib/postgrey'
+
+        getent passwd postgrey > /dev/null || \
+            adduser --system --home "$DBDIR" --no-create-home \
+                    --disabled-password --group postgrey
+        # migration from old 'nogroup' postgrey (1.23-1 and earlier):
+        getent group postgrey > /dev/null || \
+            addgroup --system postgrey
+
+        if [ ! -e "$DBDIR" ]; then
+            mkdir -p "$DBDIR"
+            dpkg-statoverride --update --add \
+                postgrey postgrey 0700 "$DBDIR"
+        fi
+
+       ucf --three-way \
+            /usr/share/postgrey/whitelist_clients \
+            /etc/postgrey/whitelist_clients
+       ucf --three-way \
+            /usr/share/postgrey/whitelist_recipients \
+            /etc/postgrey/whitelist_recipients
+       ucf --three-way \
+            /usr/share/postgrey/postgrey-default \
+            /etc/default/postgrey
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

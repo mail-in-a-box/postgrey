@@ -19,7 +19,7 @@ Documentation
 
 See POD documentation in postgrey. Execute:
 
-  perldoc postgrey
+  man postgrey
 
 
 Mailing-List and getting Help

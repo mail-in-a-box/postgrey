@@ -1,7 +1,18 @@
 # postgrey whitelist for mail client hostnames
 # --------------------------------------------
-# put this file in /etc/postfix or specify its path
+# put this file in /etc/postgrey or specify its path
 # with --whitelist-clients=xxx
+
+# Debian-specific additions
+gluck.debian.org
+haydn.debian.org
+klecker.debian.org
+master.debian.org
+merkel.debian.org
+murphy.debian.org
+newmurphy.debian.org
+newraff.debian.org
+spohr.debian.org
 
 # greylisting.org: Southwest Airlines (unique sender, no retry)
 southwest.com
