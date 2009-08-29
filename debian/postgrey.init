@@ -31,6 +31,8 @@ SCRIPTNAME=/etc/init.d/$NAME
 # Gracefully exit if the package has been removed.
 test -x $DAEMON || exit 0
 
+. /lib/lsb/init-functions
+
 # Read config file if it is present.
 if [ -r /etc/default/$NAME ]
 then
@@ -44,37 +46,57 @@ else
     POSTGREY_TEXT_OPT="--greylist-text=$POSTGREY_TEXT"
 fi
 
+ret=0
 case "$1" in
   start)
-	echo -n "Starting $DESC: $NAME"
-	start-stop-daemon --start --quiet --pidfile $PIDFILE \
-		--exec $DAEMON -- $POSTGREY_OPTS "$POSTGREY_TEXT_OPT"
-	echo "."
+	log_daemon_msg "Starting $DESC" "$NAME"
+	if start-stop-daemon --start --oknodo --quiet \
+		--pidfile $PIDFILE --name $NAME \
+		--startas $DAEMON -- $POSTGREY_OPTS "$POSTGREY_TEXT_OPT"
+	then
+	    log_end_msg 0
+	else
+	    ret=$?
+	    log_end_msg 1
+	fi
 	;;
   stop)
-	echo -n "Stopping $DESC: $NAME"
-	start-stop-daemon --stop --quiet --pidfile $PIDFILE --oknodo
+	log_daemon_msg "Stopping $DESC" "$NAME"
+	if start-stop-daemon --stop --oknodo --quiet \
+		--pidfile $PIDFILE --name $NAME
+	then
+	    log_end_msg 0
+	else
+	    ret=$?
+	    log_end_msg 1
+	fi
         rm -f $PIDFILE
-	echo "."
 	;;
   reload|force-reload)
-	echo -n "Reloading $DESC configuration..."
-	start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE
-	echo "done."
+	log_action_begin_msg "Reloading $DESC configuration..."
+	if start-stop-daemon --stop --signal 1 --quiet \
+		--pidfile $PIDFILE --name $NAME
+	then
+	    log_action_end_msg 0
+	else
+	    ret=$?
+	    log_action_end_msg 1
+	fi
         ;;
   restart)
-	echo -n "Restarting $DESC: $NAME"
-	start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
-        rm -f $PIDFILE
-	sleep 1
-	start-stop-daemon --start --quiet --pidfile $PIDFILE \
-                --exec $DAEMON -- $POSTGREY_OPTS  "$POSTGREY_TEXT_OPT"
-	echo "."
+	$0 stop
+	$0 start
+	ret=$?
 	;;
+  status)
+	status_of_proc -p $PIDFILE $DAEMON "$NAME" 2>/dev/null
+	ret=$?
+	;;
+
   *)
-	echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+	echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload|status}" >&2
 	exit 1
 	;;
 esac
 
-exit 0
+exit $ret
