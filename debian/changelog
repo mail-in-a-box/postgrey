@@ -1,3 +1,13 @@
+postgrey (1.32-4) UNRELEASED; urgency=low
+
+  [Adrian von Bidder]
+  * postgrey isn't orphaned anymore (closes: #544176)
+
+  [Jon Daley]
+  * LSB-compliant initscript, thanks to Vaclav Ovsik (closes: #523488)
+
+ -- Adrian von Bidder <cmot@debian.org>  Sun, 30 Aug 2009 09:06:55 +0200
+
 postgrey (1.32-3) unstable; urgency=low
 
   * debconf warning of the port change.

@@ -1,7 +1,9 @@
 Source: postgrey
 Section: mail
 Priority: optional
-Maintainer: Adrian von Bidder <cmot@debian.org>
+Maintainer: postgrey packagers <pkg-postgrey-devel@lists.alioth.debian.org>
+Uploaders: Jon Daley <jondaley-guest@alioth.debian.org>,
+    Adrian von Bidder <avbidder@fortytwo.ch>
 Build-Depends: debhelper (>= 4.1.46), po-debconf
 Build-Depends-Indep: quilt
 Standards-Version: 3.8.0
