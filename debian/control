@@ -1,0 +1,27 @@
+Source: postgrey
+Section: mail
+Priority: optional
+Maintainer: postgrey packagers <pkg-postgrey-devel@lists.alioth.debian.org>
+Uploaders: Jon Daley <jondaley-guest@alioth.debian.org>,
+    Adrian von Bidder <avbidder@fortytwo.ch>
+Build-Depends: debhelper (>= 4.1.46), po-debconf
+Build-Depends-Indep: quilt
+Standards-Version: 3.8.0
+Homepage: http://postgrey.schweikert.ch/
+
+Package: postgrey
+Architecture: all
+Depends: adduser, debconf, libberkeleydb-perl (>= 0.23-2), libnet-dns-perl,
+ libnet-server-perl (>= 0.87), perl, ucf (>= 0.28)
+Conflicts: libsys-syslog-perl (<< 0.21)
+Recommends: libdigest-sha1-perl, libnet-rblclient-perl, libparse-syslog-perl,
+ postfix
+Description: greylisting implementation for Postfix
+ A policy server for Postfix implementing greylisting.
+ .
+ Greylisting means that you reject email from a server on the first try,
+ using the fact that most spammers do not retry to send their email,
+ whereas almost all normal mail servers do.
+ .
+ While Postgrey is designed for the use with Postfix, it can also be used
+ with Exim.

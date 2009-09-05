@@ -1,0 +1,48 @@
+#! /bin/sh
+# postinst script for postgrey
+
+set -e
+
+# lintian: postinst-does-not-load-confmodule
+. /usr/share/debconf/confmodule
+
+case "$1" in
+    configure)
+        DBDIR='/var/lib/postgrey'
+
+        getent passwd postgrey > /dev/null || \
+            adduser --system --home "$DBDIR" --no-create-home \
+                    --disabled-password --group postgrey
+        # migration from old 'nogroup' postgrey (1.23-1 and earlier):
+        getent group postgrey > /dev/null || \
+            addgroup --system postgrey
+
+        install -d -o postgrey -g postgrey -m 0700 "$DBDIR"
+
+        ucf --debconf-ok --three-way \
+            /usr/share/postgrey/whitelist_clients \
+            /etc/postgrey/whitelist_clients
+        ucf --debconf-ok --debconf-ok --three-way \
+            /usr/share/postgrey/whitelist_recipients \
+            /etc/postgrey/whitelist_recipients
+        ucf --debconf-ok --three-way \
+            /usr/share/postgrey/postgrey-default \
+            /etc/default/postgrey
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+# without this, debconf hangs after end of postinst.
+db_stop
+
+exit 0
