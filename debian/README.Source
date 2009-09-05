@@ -1,9 +1,0 @@
-This is a source package with a quilt patch series.
-
-I use the (yet to be released) hgdebuild to keep the patches in a (yet to be
-published) hg repository, but you can just as well use quilt to manage the
-patch series.
-
-Please add modifications in new patches.  The first patch
-(imported-upstrea-diff) is merely the lump of changes I haven't reworked in the
-svn -> hg conversion.

@@ -1,6 +1,0 @@
-Template: postgrey/1.32-3_changeport
-Type: note
-_Description: Default TCP port change
- Postgrey is now listening to port 10023 and not 60000.  The latter was an
- unnecessary Debian specific modification.  You will need to adjust your
- configuration (usually /etc/postfix/main.cf) accordingly.
