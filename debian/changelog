@@ -13,6 +13,7 @@ postgrey (1.32-4) UNRELEASED; urgency=low
     + bumped Standards-Version to 3.8.3
     + added ${misc:Depends} to Depends
     + bumping debhelper version to 7 in B-D
+    + quilt add to B-D because it runs in the clean target
   * debian/rules: 
     + removing deprecated dh_clean -k in favour of dh_prep
     + removing any reference to patches.mk, using the standard quilt process
