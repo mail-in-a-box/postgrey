@@ -1,13 +1,15 @@
 Source: postgrey
 Section: mail
 Priority: optional
-Maintainer: postgrey packagers <pkg-postgrey-devel@lists.alioth.debian.org>
-Uploaders: Jon Daley <jondaley-guest@alioth.debian.org>,
-    Adrian von Bidder <avbidder@fortytwo.ch>
+Maintainer: Antonio Radici <antonio@dyne.org>
+Uploaders: Adrian von Bidder <avbidder@fortytwo.ch>
 Build-Depends: debhelper (>= 4.1.46), po-debconf
 Build-Depends-Indep: quilt
-Standards-Version: 3.8.0
+Standards-Version: 3.8.3
 Homepage: http://postgrey.schweikert.ch/
+Vcs-Browser: http://git.debian.org/?p=collab-maint/postgrey.git
+Vcs-Git: git://git.debian.org/git/collab-maint/postgrey.git
+DM-Upload-Allowed: yes
 
 Package: postgrey
 Architecture: all
