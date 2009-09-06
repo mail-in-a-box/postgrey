@@ -3,8 +3,7 @@ Section: mail
 Priority: optional
 Maintainer: Antonio Radici <antonio@dyne.org>
 Uploaders: Adrian von Bidder <avbidder@fortytwo.ch>
-Build-Depends: debhelper (>= 7), po-debconf
-Build-Depends-Indep: quilt
+Build-Depends: debhelper (>= 7), po-debconf, quilt
 Standards-Version: 3.8.3
 Homepage: http://postgrey.schweikert.ch/
 Vcs-Browser: http://git.debian.org/?p=collab-maint/postgrey.git
