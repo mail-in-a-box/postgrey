@@ -1,4 +1,4 @@
-postgrey (1.32-4) UNRELEASED; urgency=low
+postgrey (1.32-4) unstable; urgency=low
 
   [ Antonio Radici ]
   * debian/postgrey.{postrm,postinst} scripts renamed to {postrm,postinst}
