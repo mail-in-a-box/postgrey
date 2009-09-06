@@ -11,6 +11,8 @@ postgrey (1.32-4) UNRELEASED; urgency=low
     + removed Jon Daley as Uploader, keeping Adrian
     + added Vcs-Git, Vcs-Browser, DMUA
     + bumped Standards-Version to 3.8.3
+    + added ${misc:Depends} to Depends
+    + bumping debhelper version to 7 in B-D
 
   [Adrian von Bidder]
   * postgrey isn't orphaned anymore (closes: #544176)
