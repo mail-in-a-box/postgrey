@@ -13,11 +13,14 @@ postgrey (1.32-4) UNRELEASED; urgency=low
     + bumped Standards-Version to 3.8.3
     + added ${misc:Depends} to Depends
     + bumping debhelper version to 7 in B-D
-  * debian/rules: removing deprecated dh_clean -k in favour of dh_prep
+  * debian/rules: 
+    + removing deprecated dh_clean -k in favour of dh_prep
+    + removing any reference to patches.mk, using the standard quilt process
   * debian/copyright:
     + added myself as adopter
     + changed the short version of the license to refer to GPL-2+
     + added a versioned reference to GPL-2 in common-licenses
+  * README.Source removed, added a more extensive README.source from quilt docs
 
   [Adrian von Bidder]
   * postgrey isn't orphaned anymore (closes: #544176)
