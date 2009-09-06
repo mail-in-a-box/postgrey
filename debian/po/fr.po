@@ -1,0 +1,42 @@
+# French translation for the postgrey package
+# Copyright (C) 2009 debian-l10n-french
+# This file is distributed under the same license as the postgrey package.
+# Adrian von Bidder <cmot@debian.org>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.32-3\n"
+"Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
+"POT-Creation-Date: 2009-03-24 07:06+0100\n"
+"PO-Revision-Date: 2009-03-24 01:18+0100\n"
+"Last-Translator: Steve Petruzzello <dlist@bluewin.ch>\n"
+"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:2001
+msgid "Default TCP port change"
+msgstr "Modification du port TCP par défaut"
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:2001
+msgid ""
+"Postgrey is now listening on port 10023 (rather than 60000), which brings "
+"its behavior closer to the default upstream settings."
+msgstr ""
+"Postgrey est dorénavant à l'écoute sur le port 10023 (au lieu de 60000) ce "
+"qui rend son comportement plus proche de la configuration par défaut."
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:2001
+msgid ""
+"You will need to adjust its configuration (usually in /etc/postfix/main.cf) "
+"accordingly."
+msgstr ""
+"Vous devrez adapter la configuration du fichier « /etc/postfix/main.cf » en "
+"conséquence."

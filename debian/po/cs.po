@@ -1,0 +1,35 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the postgrey package.
+# Martin Sin <martin.sin@zshk.cz>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: postgrey 1.32-3\n"
+"Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
+"POT-Creation-Date: 2009-02-27 21:49+0100\n"
+"PO-Revision-Date: 2009-06-16 09:35+0200\n"
+"Last-Translator: Martin Sin <martin.sin@zshk.cz>\n"
+"Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:1001
+msgid "Default TCP port change"
+msgstr "Změna výchozího portu TCP"
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:1001
+msgid ""
+"Postgrey is now listening to port 10023 and not 60000.  The latter was an "
+"unnecessary Debian specific modification.  You will need to adjust your "
+"configuration (usually /etc/postfix/main.cf) accordingly."
+msgstr ""
+"Postgrey nyní poslouchá na portu 10023 (původně to byl port 60000). Předchozí "
+"nastavení bylo typické pro Debian, ale nebylo nutné. Novému nastavení je "
+"třeba přizpůsobit také vaše aktuální nastavení (obvykle uložené v souboru "
+"/etc/postfix/main.cf)."

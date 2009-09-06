@@ -1,0 +1,43 @@
+# translation of postgrey debconf to Portuguese
+# Copyright (C) 2009 The postgrey's copyright holder
+# This file is distributed under the same license as the postgrey package.
+#
+# Américo Monteiro <a_monteiro@netcabo.pt>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: postgrey 1.32-4\n"
+"Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
+"POT-Creation-Date: 2009-03-24 07:06+0100\n"
+"PO-Revision-Date: 2009-04-04 09:21+0100\n"
+"Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
+"Language-Team: Portuguese <traduz@debianpt.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:2001
+msgid "Default TCP port change"
+msgstr "O porto TCP predefinido mudou"
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:2001
+msgid ""
+"Postgrey is now listening on port 10023 (rather than 60000), which brings "
+"its behavior closer to the default upstream settings."
+msgstr ""
+"O postgrey agora escuta no porto 10023 (em vez do 60000), o que trás o seu "
+"comportamento para mais junto das predefinições originais."
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:2001
+msgid ""
+"You will need to adjust its configuration (usually in /etc/postfix/main.cf) "
+"accordingly."
+msgstr ""
+"Você vai precisar de ajustar a sua configuração (normalmente em /etc/postfix/"
+"main.cf) de acordo com a nova definição."

@@ -1,6 +1,17 @@
+# These templates have been reviewed by the debian-l10n-english
+# team
+#
+# If modifications/additions/rewording are needed, please ask
+# debian-l10n-english@lists.debian.org for advice.
+#
+# Even minor modifications require translation updates and such
+# changes should be coordinated with translators and reviewers.
+
 Template: postgrey/1.32-3_changeport
-Type: note
+Type: error
 _Description: Default TCP port change
- Postgrey is now listening to port 10023 and not 60000.  The latter was an
- unnecessary Debian specific modification.  You will need to adjust your
- configuration (usually /etc/postfix/main.cf) accordingly.
+ Postgrey is now listening on port 10023 (rather than 60000), which
+ brings its behavior closer to the default upstream settings.
+ .
+ You will need to adjust its configuration (usually in
+ /etc/postfix/main.cf) accordingly.

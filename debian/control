@@ -18,11 +18,11 @@ Conflicts: libsys-syslog-perl (<< 0.21)
 Recommends: libdigest-sha1-perl, libnet-rblclient-perl, libparse-syslog-perl,
  postfix
 Description: greylisting implementation for Postfix
- A policy server for Postfix implementing greylisting.
+ This package provides a policy server for Postfix to implement "greylisting".
  .
- Greylisting means that you reject email from a server on the first try,
- using the fact that most spammers do not retry to send their email,
- whereas almost all normal mail servers do.
+ Greylisting is a spam filtering method that rejects email from external
+ servers on the first try. Spammers don't usually retry sending their
+ messages, whereas legitimate mail servers do.
  .
- While Postgrey is designed for the use with Postfix, it can also be used
+ While Postgrey is designed for use with Postfix, it can also be used
  with Exim.

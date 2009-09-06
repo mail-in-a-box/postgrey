@@ -25,6 +25,21 @@ postgrey (1.32-4) UNRELEASED; urgency=low
   * debian/patches
     + added a description to all patches
     + added postgreyreport-poderrors to fix two POD errors
+  * Debconf templates and debian/control reviewed by the debian-l10n-english 
+    team as part of the Smith review project. Closes: #520482
+  * [Debconf translation updates]:
+    + Swedish. Closes: #521069
+    + Italian. Closes: #521247
+    + German. Closes: #518330
+    + Spanish. Closes: #522392
+    + Portuguese. Closes: #522494
+    + French. Closes: #522735
+    + Russian. Closes: #522821
+    + Finnish. Closes: #522822
+    + Japanese. Closes: #520023
+    + Galician. Closes: #524254
+    + Czech. Closes: #533278
+    + Basque. Closes: #544014
 
   [Adrian von Bidder]
   * postgrey isn't orphaned anymore (closes: #544176)

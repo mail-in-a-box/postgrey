@@ -1,0 +1,64 @@
+# postgrey po-debconf translation to Spanish
+# Copyright (C) 2009 Software in the Public Interest
+# This file is distributed under the same license as the postgrey package.
+#
+# Changes:
+#   - Initial translation
+#       Francisco Javier Cuadrado <fcocuadrado@gmail.com>, 2009
+#
+# Traductores, si no conocen el formato PO, merece la pena leer la
+# documentación de gettext, especialmente las secciones dedicadas a este
+# formato, por ejemplo ejecutando:
+#       info -n '(gettext)PO Files'
+#       info -n '(gettext)Header Entry'
+#
+# Equipo de traducción al español, por favor lean antes de traducir
+# los siguientes documentos:
+#
+#   - El proyecto de traducción de Debian al español
+#     http://www.debian.org/intl/spanish/coordinacion
+#     especialmente las notas de traducción en
+#     http://www.debian.org/intl/spanish/notas
+#
+#   - La guía de traducción de po's de debconf:
+#     /usr/share/doc/po-debconf/README-trans
+#     o http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: postgrey 1.32-4\n"
+"Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
+"POT-Creation-Date: 2009-03-24 07:06+0100\n"
+"PO-Revision-Date: 2009-03-24 09:02+0100\n"
+"Last-Translator: Francisco Javier Cuadrado <fcocuadrado@gmail.com>\n"
+"Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:2001
+msgid "Default TCP port change"
+msgstr "Cambio del puerto TCP predeterminado"
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:2001
+msgid ""
+"Postgrey is now listening on port 10023 (rather than 60000), which brings "
+"its behavior closer to the default upstream settings."
+msgstr ""
+"Ahora postgrey escucha en el puerto 10023 (en lugar del 60000), lo que "
+"acerca su comportamiento a la configuración predeterminada del desarrollo "
+"principal."
+
+#. Type: note
+#. Description
+#: ../postgrey.templates:2001
+msgid ""
+"You will need to adjust its configuration (usually in /etc/postfix/main.cf) "
+"accordingly."
+msgstr ""
+"Necesitará ajustar su configuración (normalmente en el archivo «/etc/postfix/"
+"main.cf») de la forma adecuada."
