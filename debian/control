@@ -12,7 +12,7 @@ Homepage: http://postgrey.schweikert.ch/
 Package: postgrey
 Architecture: all
 Depends: adduser, debconf, libberkeleydb-perl (>= 0.23-2), libnet-dns-perl,
- libnet-server-perl (>= 0.87), perl, ucf (>= 0.28)
+ libnet-server-perl (>= 0.87), perl, ucf (>= 0.28), db4.7-util
 Conflicts: libsys-syslog-perl (<< 0.21)
 Recommends: libdigest-sha1-perl, libnet-rblclient-perl, libparse-syslog-perl,
  postfix
