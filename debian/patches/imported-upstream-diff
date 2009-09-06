@@ -1,3 +1,7 @@
+Various debian additions to the original postgrey, to adapt the package to
+debian user/group and other things, see the patch for more comments, the patch
+was written by Adrian von Bidder
+
 diff --git a/README b/README
 --- a/README
 +++ b/README

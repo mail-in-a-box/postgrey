@@ -1,3 +1,5 @@
+Extending the default whitelist for gogle servers do to a change in their PTR's
+
 diff --git a/postgrey_whitelist_clients b/postgrey_whitelist_clients
 --- a/postgrey_whitelist_clients
 +++ b/postgrey_whitelist_clients
