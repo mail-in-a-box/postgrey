@@ -8,7 +8,7 @@ postgrey (1.32-4) unstable; urgency=low
     + debian/control: added a dependency on db4.7-util
   * debian/control:
     + added myself as maintainer (see Adrian's changelog)
-    + removed Jon Daley as Uploader, keeping Adrian
+    + removed Adrian as Uploader, keeping Jon Daley
     + added Vcs-Git, Vcs-Browser, DMUA
     + bumped Standards-Version to 3.8.3
     + added ${misc:Depends} to Depends
