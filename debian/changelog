@@ -14,6 +14,7 @@ postgrey (1.32-4) unstable; urgency=low
     + added ${misc:Depends} to Depends
     + bumping debhelper version to 7 in B-D
     + quilt add to B-D because it runs in the clean target
+    + bumped dep to libberkeleydbperl >= 0.39-1
   * debian/rules: 
     + removing deprecated dh_clean -k in favour of dh_prep
     + removing any reference to patches.mk, using the standard quilt process
