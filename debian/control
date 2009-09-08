@@ -2,7 +2,6 @@ Source: postgrey
 Section: mail
 Priority: optional
 Maintainer: Antonio Radici <antonio@dyne.org>
-Uploaders: Adrian von Bidder <avbidder@fortytwo.ch>
 Build-Depends: debhelper (>= 7), quilt
 Build-Depends-Indep: po-debconf
 Standards-Version: 3.8.3
