@@ -1,3 +1,9 @@
+postgrey (1.32-5) unstable; urgency=low
+
+  * debian/postgrey.logcheck.*: client_name is now optional (Closes: 518987)
+
+ -- Antonio Radici <antonio@dyne.org>  Sat, 12 Sep 2009 00:37:33 +0100
+
 postgrey (1.32-4) unstable; urgency=low
 
   [ Antonio Radici ]
