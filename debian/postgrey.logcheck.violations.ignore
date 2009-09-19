@@ -1,3 +1,3 @@
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ postfix/smtpd\[[0-9]+\]: (NOQUEUE|[0-9A-F]+): reject: RCPT from .+\[[0-9.]{7,15}\]: 450 <.+>: Recipient address rejected: Greylisted, see http://isg\.ee\.ethz\.ch/tools/postgrey/help/.+\.html; from=<.*> to=<.+> proto=E?SMTP helo=<.+>$
-^\w{3} [ :0-9]{11} [._[:alnum:]-]+ postgrey(\[[0-9]+\])?:( [0-9A-F]+:)? action=.+, reason=.+,( delay=.+,)? client_name=.+, client_address=.+,( sender=.*,)? recipient=.+
+^\w{3} [ :0-9]{11} [._[:alnum:]-]+ postgrey(\[[0-9]+\])?:( [0-9A-F]+:)? action=.+, reason=.+,( delay=.+,)?( client_name=.+,)? client_address=.+,( sender=.*,)? recipient=.+
 ^\w{3} [ :0-9]{11} [._[:alnum:]-]+ postgrey(\[[0-9]+\])?: delayed [0-9]+ seconds: client=.+, from=.*, to=
