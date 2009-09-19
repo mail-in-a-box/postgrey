@@ -1,33 +1,42 @@
 # Copyright (C) 2009 Adrian von Bidder <cmot@debian.org>
 # This file is distributed under the same license as postgrey package.
 # Hideki Yamane (Debian-JP) <henrich@debian.or.jp>, 2009.
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: postgrey 1.32-3\n"
-"Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
-"POT-Creation-Date: 2009-02-27 21:49+0100\n"
-"PO-Revision-Date: 2009-03-07 12:20+0900\n"
+"Project-Id-Version: postgrey 1.32-4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-12 10:31+0200\n"
+"PO-Revision-Date: 2009-09-13 22:20+0900\n"
 "Last-Translator: Hideki Yamane (Debian-JP) <henrich@debian.or.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. Type: note
+#. Type: error
 #. Description
-#: ../postgrey.templates:1001
+#: ../postgrey.templates:2001
 msgid "Default TCP port change"
 msgstr "デフォルトの TCP ポート番号の変更"
 
-#. Type: note
+#. Type: error
 #. Description
-#: ../postgrey.templates:1001
+#: ../postgrey.templates:2001
 msgid ""
-"Postgrey is now listening to port 10023 and not 60000.  The latter was an "
-"unnecessary Debian specific modification.  You will need to adjust your "
-"configuration (usually /etc/postfix/main.cf) accordingly."
+"Postgrey is now listening on port 10023 (rather than 60000), which brings "
+"its behavior closer to the default upstream settings."
 msgstr ""
-"postgrey は現在 ポート 60000 ではなく 10023 を listen しています。前者のポート"
-"番号は、現在必要が無くなった Debian 固有の変更でした。設定 (通常は /etc/postfix"
-"/main.cf) に従って調整する必要があります。"
+"postgrey は現在 ポート 60000 ではなく 10023 を listen しており、開発元の"
+"デフォルト設定に近くなっています。"
+
+#. Type: error
+#. Description
+#: ../postgrey.templates:2001
+msgid ""
+"You will need to adjust its configuration (usually in /etc/postfix/main.cf) "
+"accordingly."
+msgstr ""
+"設定 (通常は /etc/postfix/main.cf) に従って調整する必要があります。"
+
+
