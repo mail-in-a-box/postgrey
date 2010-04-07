@@ -2,7 +2,9 @@ postgrey (1.32-5) unstable; urgency=low
 
   [ Antonio Radici ]
   * debian/postgrey.logcheck.*: client_name is now optional (Closes: 518987)
-  * debian/control: added exim4 to Recommends (Closes: 547413)
+  * debian/control: 
+    + added exim4 to Recommends (Closes: 547413)
+    + Standards-Version bumped to 3.8.4 (nothing changed)
 
   [ Christian Perrier ]
   * Explicitly mention "1.0" as source format
@@ -14,7 +16,10 @@ postgrey (1.32-5) unstable; urgency=low
     - Norwegian Bokmål (Bjørn Steensrud).  Closes: #576028
     - Vietnamese (Clytie Siddall).  Closes: #576123
 
- -- Antonio Radici <antonio@dyne.org>  Wed, 07 Apr 2010 22:02:20 +0100
+  [ Antonio Radici ]
+  * 
+
+ -- Antonio Radici <antonio@dyne.org>  Wed, 07 Apr 2010 22:25:23 +0100
 
 postgrey (1.32-4) unstable; urgency=low
 
