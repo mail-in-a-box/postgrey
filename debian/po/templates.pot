@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
-"POT-Creation-Date: 2009-03-24 07:06+0100\n"
+"POT-Creation-Date: 2010-03-30 06:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,13 +16,13 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. Type: note
+#. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid "Default TCP port change"
 msgstr ""
 
-#. Type: note
+#. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid ""
@@ -30,7 +30,7 @@ msgid ""
 "its behavior closer to the default upstream settings."
 msgstr ""
 
-#. Type: note
+#. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid ""

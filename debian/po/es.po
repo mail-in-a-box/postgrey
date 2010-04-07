@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: postgrey 1.32-4\n"
 "Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
-"POT-Creation-Date: 2009-03-24 07:06+0100\n"
+"POT-Creation-Date: 2010-03-30 06:40+0200\n"
 "PO-Revision-Date: 2009-03-24 09:02+0100\n"
 "Last-Translator: Francisco Javier Cuadrado <fcocuadrado@gmail.com>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
@@ -36,13 +36,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. Type: note
+#. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid "Default TCP port change"
 msgstr "Cambio del puerto TCP predeterminado"
 
-#. Type: note
+#. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid ""
@@ -53,7 +53,7 @@ msgstr ""
 "acerca su comportamiento a la configuración predeterminada del desarrollo "
 "principal."
 
-#. Type: note
+#. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid ""

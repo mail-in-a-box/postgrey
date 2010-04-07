@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: postgrey 1.32-4\n"
 "Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
-"POT-Creation-Date: 2009-03-24 07:06+0100\n"
+"POT-Creation-Date: 2010-03-30 06:40+0200\n"
 "PO-Revision-Date: 2009-04-04 09:21+0100\n"
 "Last-Translator: Américo Monteiro <a_monteiro@netcabo.pt>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -16,13 +16,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#. Type: note
+#. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid "Default TCP port change"
 msgstr "O porto TCP predefinido mudou"
 
-#. Type: note
+#. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid ""
@@ -32,7 +32,7 @@ msgstr ""
 "O postgrey agora escuta no porto 10023 (em vez do 60000), o que trás o seu "
 "comportamento para mais junto das predefinições originais."
 
-#. Type: note
+#. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid ""

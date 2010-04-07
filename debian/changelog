@@ -1,10 +1,20 @@
 postgrey (1.32-5) unstable; urgency=low
 
+  [ Antonio Radici ]
   * debian/postgrey.logcheck.*: client_name is now optional (Closes: 518987)
   * debian/control: added exim4 to Recommends (Closes: 547413)
-  * debian/po/ja.po: translation updated (Closes: 546685)
 
- -- Antonio Radici <antonio@dyne.org>  Sat, 12 Sep 2009 00:37:33 +0100
+  [ Christian Perrier ]
+  * Explicitly mention "1.0" as source format
+  * Add $remote_fs to dependencies for init script as
+    it is using /usr which could be located on a distant machine
+  * Fix pending l10n issues. Debconf translations:
+    - Japanese (Hideki Yamane (Debian-JP)).  Closes: #546685
+    - Czech (Martin Sin).  Closes: #575955
+    - Norwegian Bokmål (Bjørn Steensrud).  Closes: #576028
+    - Vietnamese (Clytie Siddall).  Closes: #576123
+
+ -- Antonio Radici <antonio@dyne.org>  Wed, 07 Apr 2010 22:02:20 +0100
 
 postgrey (1.32-4) unstable; urgency=low
 
