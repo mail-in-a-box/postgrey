@@ -1,4 +1,4 @@
-postgrey (1.32-5squeeze1) testing-proposed-updates; urgency=low
+postgrey (1.32-6) unstable; urgency=low
 
   * Drop preinst and thus dependency on dbutil-4.7. (Closes: #594451)
     + patch provided by Stefano Rivera (stefano@rivera.za.net), thanks!
