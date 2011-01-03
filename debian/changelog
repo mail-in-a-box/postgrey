@@ -6,6 +6,8 @@ postgrey (1.33-1) experimental; urgency=low
     + whitelist-google dropped, it is integrated upstream
   * debian/control:
     + Standards-Version bumped to 3.9.1, no changes required
+    + removed a restriction on liberkeleydb-perl version, build against
+      whichever lib is present
 
  -- Antonio Radici <antonio@dyne.org>  Mon, 03 Jan 2011 18:35:17 +0000
 
