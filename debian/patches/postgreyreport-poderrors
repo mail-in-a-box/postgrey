@@ -2,20 +2,20 @@ fix two pod errors in postgreyreport
 
 --- a/contrib/postgreyreport
 +++ b/contrib/postgreyreport
-@@ -629,6 +629,8 @@
- ( you be the judge on how old is acceptable ). if you run the report against a live maillog you are
- not giving legit MTA's enough time to try again and you will have lots of inaccurate information.
+@@ -644,6 +644,8 @@
+ 
+ =over
  
 +=over
 +
  =item * Ex usage:
  
  	zcat /var/log/maillog.0.gz | ./postgreyreport [options] > postgreyreport.log
-@@ -664,6 +666,7 @@
-    MX                             legituser@mac.com                      user6@recipient7.com 
-  :============================================================================================
+@@ -683,6 +685,7 @@
+ 
+ =head1 HISTORY
  
 +=back
  
- =head1 HISTORY
+ B<1.14.3  20100321>
  

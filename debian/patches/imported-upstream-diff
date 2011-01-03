@@ -2,7 +2,6 @@ Various debian additions to the original postgrey, to adapt the package to
 debian user/group and other things, see the patch for more comments, the patch
 was written by Adrian von Bidder
 
-diff --git a/README b/README
 --- a/README
 +++ b/README
 @@ -19,7 +19,7 @@
@@ -14,7 +13,6 @@ diff --git a/README b/README
  
  See also Postgrey's homepage:
  
-diff --git a/README.exim b/README.exim
 --- a/README.exim
 +++ b/README.exim
 @@ -12,7 +12,7 @@
@@ -26,8 +24,6 @@ diff --git a/README.exim b/README.exim
         set acl_m0  = ${sg{${readsocket{/var/run/postgrey}{$acl_m0}{5s}{}{action=DUNNO}}}{action=}{}}
         message     = ${sg{$acl_m0}{^\\w+\\s*}{}}
         condition   = ${if eq{${uc:${substr{0}{5}{$acl_m0}}}}{DEFER}{true}{false}}
-diff --git a/contrib/postgrey_clients_dump b/contrib/postgrey_clients_dump
-new file mode 100644
 --- /dev/null
 +++ b/contrib/postgrey_clients_dump
 @@ -0,0 +1,54 @@
@@ -85,7 +81,6 @@ new file mode 100644
 +main;
 +
 +# vim: sw=4
-diff --git a/contrib/postgreyreport b/contrib/postgreyreport
 --- a/contrib/postgreyreport
 +++ b/contrib/postgreyreport
 @@ -24,7 +24,7 @@
@@ -97,7 +92,7 @@ diff --git a/contrib/postgreyreport b/contrib/postgreyreport
  	delay			=> 300,
  	return_string		=> 'Greylisted',	# match on this string
  
-@@ -583,7 +583,7 @@
+@@ -594,7 +594,7 @@
       --version		      display version and exit
  
       --user=USER              run as USER (default: postgrey)
@@ -106,13 +101,12 @@ diff --git a/contrib/postgreyreport b/contrib/postgreyreport
       --delay=N                report triplets that did not try again after N seconds (default: 300)
       --greylist-text=TXT      text to match on for greylist maillog lines
  
-diff --git a/postgrey b/postgrey
 --- a/postgrey
 +++ b/postgrey
 @@ -23,8 +23,8 @@
  @ISA = qw(Net::Server::Multiplex);
  
- my $VERSION = '1.32';
+ my $VERSION = '1.33';
 -my $DEFAULT_DBDIR = '/var/spool/postfix/postgrey';
 -my $CONFIG_DIR = '/etc/postfix';
 +my $DEFAULT_DBDIR = '/var/lib/postgrey';
@@ -120,7 +114,7 @@ diff --git a/postgrey b/postgrey
  
  sub cidr_parse($)
  {
-@@ -575,7 +575,7 @@
+@@ -581,7 +581,7 @@
              port             => [ $opt{inet} ? $opt{inet} : $opt{unix}."|unix" ],
              proto            => $opt{inet} ? 'tcp' : 'unix',
              user             => $opt{user} || 'postgrey',
@@ -129,7 +123,7 @@ diff --git a/postgrey b/postgrey
              dbdir            => $opt{dbdir} || $DEFAULT_DBDIR,
              setsid           => $opt{daemonize} ? 1 : undef,
              pid_file         => $opt{daemonize} ? $opt{pidfile} : undef,
-@@ -599,10 +599,11 @@
+@@ -605,10 +605,11 @@
              greylist_action  => $opt{'greylist-action'} || 'DEFER_IF_PERMIT',
              greylist_text    => $opt{'greylist-text'} || 'Greylisted, see http://postgrey.schweikert.ch/help/%r.html',
              whitelist_clients_files    => $opt{'whitelist-clients'} ||
@@ -144,7 +138,7 @@ diff --git a/postgrey b/postgrey
              privacy => defined $opt{'privacy'},
              hostname => defined $opt{hostname} ? $opt{hostname} : hostname,
              exim => defined $opt{'exim'},
-@@ -783,8 +784,8 @@
+@@ -790,8 +791,8 @@
   -d, --daemonize         run in the background
       --pidfile=PATH      put daemon pid into this file
       --user=USER         run as USER (default: postgrey)
@@ -155,7 +149,7 @@ diff --git a/postgrey b/postgrey
       --delay=N           greylist for N seconds (default: 300)
       --max-age=N         delete entries older than N days since the last time
                           that they have been seen (default: 35)
-@@ -798,8 +799,8 @@
+@@ -805,8 +806,8 @@
       --privacy           store data using one-way hash functions
       --hostname=NAME     set the hostname (default: `hostname`)
       --exim              don't reuse a socket for more than one query (exim compatible)
@@ -166,8 +160,8 @@ diff --git a/postgrey b/postgrey
       --auto-whitelist-clients=N   whitelist host after first successful delivery
                                    N is the minimal count of mails before a client is 
                                    whitelisted (turned on by default with value 5)
-@@ -807,8 +808,9 @@
-      --listen-queue-size=N        allow for N waiting connections to our socket
+@@ -816,8 +817,9 @@
+                                   default: X-Greylist: delayed <seconds> seconds by postgrey-<version> at <server>; <date>
  
   Note that the --whitelist-x options can be specified multiple times,
 - and that per default /etc/postfix/postgrey_whitelist_clients.local is
@@ -178,7 +172,7 @@ diff --git a/postgrey b/postgrey
  
  =head1 DESCRIPTION
  
-@@ -834,7 +836,7 @@
+@@ -843,7 +845,7 @@
  =item *
  
  Create a C<postgrey> user and the directory where to put the database I<dbdir>
@@ -187,7 +181,7 @@ diff --git a/postgrey b/postgrey
  
  =item *
  
-@@ -854,12 +856,12 @@
+@@ -866,12 +868,12 @@
  
  =item *
  
@@ -203,7 +197,7 @@ diff --git a/postgrey b/postgrey
  greylisting.
  
  =back
-@@ -870,9 +872,10 @@
+@@ -882,9 +884,10 @@
  which no greylisting should be done. Per default postgrey will read the
  following files:
  
@@ -217,26 +211,25 @@ diff --git a/postgrey b/postgrey
  
  You can specify alternative paths with the --whitelist-x options.
  
-diff --git a/postgrey_whitelist_clients b/postgrey_whitelist_clients
 --- a/postgrey_whitelist_clients
 +++ b/postgrey_whitelist_clients
-@@ -1,7 +1,14 @@
+@@ -1,8 +1,15 @@
  # postgrey whitelist for mail client hostnames
  # --------------------------------------------
 -# put this file in /etc/postfix or specify its path
 +# put this file in /etc/postgrey or specify its path
  # with --whitelist-clients=xxx
-+
+ 
 +# Debian-specific additions
 +# I *know* they run real mail queues, so greylisting only creates
 +# bigger load for them.
 +debconf.org
 +debian.org
 +spi-inc.org
- 
++
  # greylisting.org: Southwest Airlines (unique sender, no retry)
  southwest.com
-diff --git a/postgrey_whitelist_recipients b/postgrey_whitelist_recipients
+ # greylisting.org: isp.belgacom.be (wierd retry pattern)
 --- a/postgrey_whitelist_recipients
 +++ b/postgrey_whitelist_recipients
 @@ -1,6 +1,6 @@

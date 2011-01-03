@@ -1,3 +1,14 @@
+postgrey (1.33-1) experimental; urgency=low
+
+  * New upstream version
+  * debian/patches:
+    + patches refreshed
+    + whitelist-google dropped, it is integrated upstream
+  * debian/control:
+    + Standards-Version bumped to 3.9.1, no changes required
+
+ -- Antonio Radici <antonio@dyne.org>  Mon, 03 Jan 2011 18:35:17 +0000
+
 postgrey (1.32-6) unstable; urgency=low
 
   * Drop preinst and thus dependency on dbutil-4.7. (Closes: #594451)
