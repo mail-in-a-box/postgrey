@@ -4,6 +4,7 @@ postgrey (1.33-1) experimental; urgency=low
   * debian/patches:
     + patches refreshed
     + whitelist-google dropped, it is integrated upstream
+    + postgreyreport-poderrors dropped, no errors anymore
   * debian/control:
     + Standards-Version bumped to 3.9.1, no changes required
     + removed a restriction on liberkeleydb-perl version, build against
