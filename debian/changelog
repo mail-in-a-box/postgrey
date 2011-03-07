@@ -19,6 +19,13 @@ postgrey (1.33-1) experimental; urgency=low
 
  -- Antonio Radici <antonio@dyne.org>  Mon, 03 Jan 2011 18:35:17 +0000
 
+postgrey (1.32-6.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix encoding of Czech debconf translation.
+
+ -- Christian Perrier <bubulle@debian.org>  Tue, 11 Jan 2011 22:13:00 +0100
+
 postgrey (1.32-6) unstable; urgency=low
 
   * Drop preinst and thus dependency on dbutil-4.7. (Closes: #594451)
