@@ -1,0 +1,30 @@
+patch to disable the transactional logic during the cleaning of the DB, this
+fixes a problem seen as result of updates of BerkeleyDB.
+See http://bugs.debian.org/614968 for more info
+
+--- a/postgrey
++++ b/postgrey
+@@ -276,11 +276,7 @@
+                 $nr_keys_after++;
+             }
+         }
+-        my $db_obj = $self->{postgrey}{db_obj};
+-        my $txn = $db_env->txn_begin();
+-        $db_obj->Txn($txn);
+         for my $key (@old_keys) { delete $db->{$key}; }
+-        $txn->txn_commit();
+         
+         $self->mylog(1, "cleaning main database finished. before: $nr_keys_before, after: $nr_keys_after");
+ 
+@@ -300,11 +296,7 @@
+                     $nr_keys_after++;
+                 }
+             }
+-            my $db_cawl_obj = $self->{postgrey}{db_cawl_obj};
+-            $txn = $db_env->txn_begin();
+-            $db_cawl_obj->Txn($txn);
+             for my $key (@old_keys_cawl) { delete $cawl_db->{$key}; }
+-            $txn->txn_commit();
+ 
+             $self->mylog(1, "cleaning clients database finished. before: $nr_keys_before, after: $nr_keys_after");
+         }

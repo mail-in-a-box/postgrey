@@ -1,6 +1,11 @@
 postgrey (1.33-2) unstable; urgency=low
 
   * promoting to unstable
+  * Integrated Christian's NMU in the changelog (Closes: 610103)
+  * debian/patches:
+    + added disable-transaction-logic to prevent postgrey from crashing after a
+      berkeleydb update (Closes: 614968)
+
 
  -- Antonio Radici <antonio@dyne.org>  Mon, 07 Mar 2011 00:16:25 +0000
 
