@@ -1,3 +1,9 @@
+postgrey (1.33-3) unstable; urgency=low
+
+  * debian/po/pt_BR.po: Brazilian Portuguese translation (Closes: 618946)
+
+ -- Antonio Radici <antonio@dyne.org>  Mon, 21 Mar 2011 22:16:35 +0000
+
 postgrey (1.33-2) unstable; urgency=low
 
   * promoting to unstable

@@ -1,0 +1,45 @@
+# postgrey Brazilian Portuguese debconf template translation.
+# Copyright (C) 2009 THE postgrey's COPYRIGHT HOLDER
+# This file is distributed under the same license as the postgrey package.
+# Italo Valcy <italo@dcc.ufba.br>, 2009.
+# Eder L. Marques <eder@edermarques.net>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: postgrey\n"
+"Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
+"POT-Creation-Date: 2009-02-27 21:49+0100\n"
+"PO-Revision-Date: 2011-03-10 20:56-0300\n"
+"Last-Translator: Eder L. Marques <eder@edermarques.net>\n"
+"Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
+"org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
+
+#. Type: error
+#. Description
+#: ../postgrey.templates:2001
+msgid "Default TCP port change"
+msgstr "Mudança na porta TCP padrão"
+
+#. Type: error
+#. Description
+#: ../postgrey.templates:2001
+msgid ""
+"Postgrey is now listening on port 10023 (rather than 60000), which brings "
+"its behavior closer to the default upstream settings."
+msgstr ""
+"O postgrey está agora escutando na porta 10023 (em vez da 60000), o que "
+"aproxima o seu comportamento das configurações padrão do upstream."
+
+#. Type: error
+#. Description
+#: ../postgrey.templates:2001
+msgid ""
+"You will need to adjust its configuration (usually in /etc/postfix/main.cf) "
+"accordingly."
+msgstr ""
+"Você precisará ajustar sua configuração (geralmente em /etc/postfix/main.cf) "
+"adequadamente."
