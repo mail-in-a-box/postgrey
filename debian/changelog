@@ -1,3 +1,9 @@
+postgrey (1.33-3~bpo60+1) squeeze-backports; urgency=low
+
+  * backporting the current version from testing (Closes: 554887)
+
+ -- Antonio Radici <antonio@dyne.org>  Tue, 26 Apr 2011 23:22:00 +0100
+
 postgrey (1.33-3) unstable; urgency=low
 
   * debian/po/pt_BR.po: Brazilian Portuguese translation (Closes: 618946)
