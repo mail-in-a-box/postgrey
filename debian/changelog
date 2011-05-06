@@ -4,6 +4,7 @@ postgrey (1.34-1) unstable; urgency=low
   * debian/control:
     + drop libdigest-sha1-perl dependency (Closes: 625697)
     + Standards-Version bumped to 3.9.2, no change required
+  * debian/patches/imported-upstream-diff refreshed
 
  -- Antonio Radici <antonio@dyne.org>  Fri, 06 May 2011 15:25:23 +0000
 
