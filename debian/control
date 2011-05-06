@@ -16,8 +16,7 @@ Architecture: all
 Depends: adduser, debconf, libberkeleydb-perl, libnet-dns-perl,
  libnet-server-perl (>= 0.87), perl, ucf (>= 0.28), ${misc:Depends}
 Breaks: libsys-syslog-perl (<< 0.21)
-Recommends: libdigest-sha1-perl, libnet-rblclient-perl, libparse-syslog-perl,
- postfix | exim4
+Recommends: libnet-rblclient-perl, libparse-syslog-perl, postfix | exim4
 Description: greylisting implementation for Postfix
  This package provides a policy server for Postfix to implement "greylisting".
  .

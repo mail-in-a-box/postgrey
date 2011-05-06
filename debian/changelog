@@ -1,8 +1,10 @@
-postgrey (1.33-3~bpo60+1) squeeze-backports; urgency=low
+postgrey (1.34-1) unstable; urgency=low
 
-  * backporting the current version from testing (Closes: 554887)
+  * New upstream release
+  * debian/control:
+    + drop libdigest-sha1-perl dependency (Closes: 625697)
 
- -- Antonio Radici <antonio@dyne.org>  Tue, 26 Apr 2011 23:22:00 +0100
+ -- Antonio Radici <antonio@dyne.org>  Fri, 06 May 2011 15:25:23 +0000
 
 postgrey (1.33-3) unstable; urgency=low
 
