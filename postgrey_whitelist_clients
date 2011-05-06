@@ -2,6 +2,8 @@
 # --------------------------------------------
 # put this file in /etc/postfix or specify its path
 # with --whitelist-clients=xxx
+#
+# postgrey version: 1.34, build date: 2011-05-04
 
 # greylisting.org: Southwest Airlines (unique sender, no retry)
 southwest.com
@@ -196,9 +198,23 @@ yahoo.com
 /^outmail\d+\.sctm\.tfbnw\.net$/
 # 2009-02-10: server14.cyon.ch (long retry, reported by Alex Beckert)
 server14.cyon.ch
+# 2009-08-19: 126.com (big pool)
+/^m\d+-\d+\.126\.com$/
 # 2010-01-08: tifr.res.in (no retry, reported by Alex Beckert)
 home.theory.tifr.res.in
 # 2010-01-08: 1blu.de (long retry, reported by Alex Beckert)
 ms4-1.1blu.de
 # 2010-03-17: chello.at (big pool, reported by Jan-willem van Eys)
 /^viefep\d+-int\.chello\.at$/
+# 2010-05-31: nic.nu (long retry, reported by Ivan Sie)
+mx.nic.nu
+# 2010-06-10: Microsoft servers (long/no retry, reported by Roy McMorran)
+bigfish.com
+frontbridge.com
+microsoft.com
+# 2010-06-18: Google/Postini (big pool, reported by Warren Trakman)
+postini.com
+# 2011-02-04: evanzo-server.de (no retry, reported by Andre Hoepner)
+/^mx.*\.evanzo-server\.de$/
+# 2011-05-02: upcmail.net (big pool, reported by Michael Monnerie)
+upcmail.net
