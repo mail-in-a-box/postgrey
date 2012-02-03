@@ -1,27 +1,26 @@
-# Copyright (C) 2009
+# Danish translation postgrey.
+# Copyright (C) 2011 postgrey & nedenstående oversætttere.
 # This file is distributed under the same license as the postgrey package.
+# Joe Hansen <joedalton2@yahoo.dk>, 2011.
 #
-# Esko Arajärvi <edu@iki.fi>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: postgrey\n"
 "Report-Msgid-Bugs-To: postgrey@packages.debian.org\n"
 "POT-Creation-Date: 2010-03-30 06:40+0200\n"
-"PO-Revision-Date: 2009-04-06 22:04+0300\n"
-"Last-Translator: Esko Arajärvi <edu@iki.fi>\n"
-"Language-Team: Finnish <debian-l10n-finnish@lists.debian.org>\n"
-"Language: fi\n"
+"PO-Revision-Date: 2011-06-22 14:44+0200\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <debian-l10n-danish@lists.debian.org> \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 0.3\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Type: error
 #. Description
 #: ../postgrey.templates:2001
 msgid "Default TCP port change"
-msgstr "TCP-portin oletusarvo muuttui"
+msgstr "Standardændring af TCP-port"
 
 #. Type: error
 #. Description
@@ -30,8 +29,8 @@ msgid ""
 "Postgrey is now listening on port 10023 (rather than 60000), which brings "
 "its behavior closer to the default upstream settings."
 msgstr ""
-"Postgrey kuuntelee nykyään portin 60000 sijaan porttia 10023, joka on "
-"alkuperäisen version oletusarvo."
+"Postgrey lytter nu på port 10023 (fremfor 60000), hvilket gør at dens "
+"opførsel er tættere på standarden for opstrømsindstillinger."
 
 #. Type: error
 #. Description
@@ -40,5 +39,5 @@ msgid ""
 "You will need to adjust its configuration (usually in /etc/postfix/main.cf) "
 "accordingly."
 msgstr ""
-"Postgreyn asetuksia, jotka ovat yleensä tiedostossa /etc/postfix/main.cf, "
-"täytyy muuttaa vastaavasti."
+"Du skal på samme måde justere dens konfiguration (normalt i /etc/postfix/"
+"main.cf)."

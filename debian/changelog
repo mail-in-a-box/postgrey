@@ -1,3 +1,13 @@
+postgrey (1.34-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix pending l10n issues. Debconf translations:
+    - Danish (Joe Hansen).  Closes: #631301
+    - Dutch; (Jeroen Schot).  Closes: #637502
+    - Polish (Michał Kułach).  Closes: #657505
+
+ -- Christian Perrier <bubulle@debian.org>  Fri, 03 Feb 2012 07:08:14 +0100
+
 postgrey (1.34-1) unstable; urgency=low
 
   * New upstream release
