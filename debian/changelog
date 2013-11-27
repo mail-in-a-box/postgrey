@@ -1,3 +1,10 @@
+postgrey (1.34-1.2) unstable; urgency=high
+
+  * Non-maintainer upload.
+  * Make postgrey work with Perl 5.18 (closes: #722136).
+
+ -- Julien Cristau <jcristau@debian.org>  Wed, 27 Nov 2013 21:36:55 +0100
+
 postgrey (1.34-1.1) unstable; urgency=low
 
   * Non-maintainer upload.
