@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# preinst script to kill postgrey daemons started by broken init.d
+# script.  See https://bugs.debian.org/670681 for details.
+
+set -e
+
+if [ "$1" != "abort-upgrade" ] && dpkg --compare-versions "$2" lt-nl "1.34-1.3~"; then
+    start-stop-daemon --stop --oknodo --user postgrey
+fi
+
+#DEBHELPER#

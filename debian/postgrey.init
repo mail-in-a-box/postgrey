@@ -51,7 +51,7 @@ case "$1" in
   start)
 	log_daemon_msg "Starting $DESC" "$NAME"
 	if start-stop-daemon --start --oknodo --quiet \
-		--pidfile $PIDFILE --name $NAME \
+		--pidfile $PIDFILE \
 		--startas $DAEMON -- $POSTGREY_OPTS "$POSTGREY_TEXT_OPT"
 	then
 	    log_end_msg 0
@@ -63,7 +63,7 @@ case "$1" in
   stop)
 	log_daemon_msg "Stopping $DESC" "$NAME"
 	if start-stop-daemon --stop --oknodo --quiet \
-		--pidfile $PIDFILE --name $NAME
+		--pidfile $PIDFILE
 	then
 	    log_end_msg 0
 	else
@@ -75,7 +75,7 @@ case "$1" in
   reload|force-reload)
 	log_action_begin_msg "Reloading $DESC configuration..."
 	if start-stop-daemon --stop --signal 1 --quiet \
-		--pidfile $PIDFILE --name $NAME
+		--pidfile $PIDFILE
 	then
 	    log_action_end_msg 0
 	else
