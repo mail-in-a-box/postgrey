@@ -12,6 +12,7 @@ Requirements
 - IO::Multiplex (Perl Module)
 - BerkeleyDB (Perl Module)
 - Berkeley DB >= 4.1 (Library)
+- Digest::SHA (Perl Module, only for --privacy option)
 
 
 Documentation
@@ -37,4 +38,4 @@ subject 'subscribe' to:
   
 There is also a mailing-list archive, where you might find answers:
 
-  http://lists.ee.ethz.ch/postgrey
+  http://lists.ee.ethz.ch/wws/arc/postgrey
