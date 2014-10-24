@@ -12,7 +12,7 @@ override_dh_installman:
 	pod2man --section=1 contrib/postgreyreport \
 		> $(CURDIR)/debian/postgrey/usr/share/man/man1/postgreyreport.1
 
-override_dh_isntall:
+override_dh_install:
 	dh_install
 	mv $(CURDIR)/debian/postgrey/usr/share/postgrey/postgrey_whitelist_clients \
 	   $(CURDIR)/debian/postgrey/usr/share/postgrey/whitelist_clients
