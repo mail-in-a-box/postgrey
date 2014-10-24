@@ -6,6 +6,8 @@ postgrey (1.35-1) unstable; urgency=low
     + Standards-Version updated to 3.9.6, no changes required
   * debian/source/format:
     + Switched to dpkg-source 3.0 (quilt) format
+  * debian/patches:
+    + Patches refreshed
 
  -- Antonio Radici <antonio@debian.org>  Fri, 24 Oct 2014 21:14:45 +0000
 
