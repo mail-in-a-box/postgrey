@@ -2,7 +2,7 @@
 %:
 	dh $@ --with quilt
 
-override_dh_installman
+override_dh_installman:
 	mkdir -p $(CURDIR)/debian/postgrey/usr/share/man/man8/
 	mkdir -p $(CURDIR)/debian/postgrey/usr/share/man/man1/
 	pod2man --section=8 postgrey \
@@ -12,7 +12,12 @@ override_dh_installman
 	pod2man --section=1 contrib/postgreyreport \
 		> $(CURDIR)/debian/postgrey/usr/share/man/man1/postgreyreport.1
 
-
+override_dh_isntall:
+	dh_install
+	mv $(CURDIR)/debian/postgrey/usr/share/postgrey/postgrey_whitelist_clients \
+	   $(CURDIR)/debian/postgrey/usr/share/postgrey/whitelist_clients
+	mv $(CURDIR)/debian/postgrey/usr/share/postgrey/postgrey_whitelist_recipients \
+	   $(CURDIR)/debian/postgrey/usr/share/postgrey/whitelist_recipients
 #
 ## dh_make-originated rules file
 ## ©2004,2005 Adrian von Bidder
