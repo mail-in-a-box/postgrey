@@ -1,0 +1,6 @@
+postgrey                             usr/sbin/
+policy-test                          usr/sbin
+contrib/postgreyreport               usr/bin
+postgrey_whitelist_clients           usr/share/postgrey
+postgrey_whitelist_recipients        usr/share/postgrey
+debian/postgrey-default              usr/share/postgrey
