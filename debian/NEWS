@@ -1,3 +1,9 @@
+postgrey (1.35-1miab1)
+
+  Added DNSWL.org whitelisting.
+
+ -- Joshua Tauberer <jt@occams.info>  Mon May 18 18:58:40 EDT 2015
+
 postgrey (1.32-1) unstable; urgency=low
 
   Postgrey is now listening to port 10023 and not 60000.  The latter was an

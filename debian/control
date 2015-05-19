@@ -1,14 +1,13 @@
 Source: postgrey
 Section: mail
 Priority: optional
-Maintainer: Antonio Radici <antonio@debian.org>
-Uploaders: Jon Daley <jondaley-guest@alioth.debian.org>
+Maintainer: Joshua Tauberer <jt@occams.info>
 Build-Depends: debhelper (>= 7), quilt
 Build-Depends-Indep: po-debconf
 Standards-Version: 3.9.6
 Homepage: http://postgrey.schweikert.ch/
-Vcs-Browser: http://git.debian.org/?p=collab-maint/postgrey.git
-Vcs-Git: git://git.debian.org/git/collab-maint/postgrey.git
+Vcs-Browser: https://github.com/mail-in-a-box/postgrey
+Vcs-Git: https://github.com/mail-in-a-box/postgrey
 
 Package: postgrey
 Architecture: all
@@ -25,3 +24,6 @@ Description: greylisting implementation for Postfix
  .
  While Postgrey is designed for use with Postfix, it can also be used
  with Exim.
+ .
+ This version has been modified by Mail-in-a-Box to whitelist senders
+ in the DNSWL.org list. See https://mailinabox.email.

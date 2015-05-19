@@ -1,6 +1,10 @@
+This package is a fork by Mail-in-a-Box (https://mailinabox.email). Original
+copyright statement follows:
+----------------------------------------------------------------------------
+
 This Debian package was prepared by Adrian von Bidder <cmot@debian.org> in
 July 2004, then the package was adopted by Antonio Radici <antonio@dyne.org>
-in Sept 2009
+in Sept 2009.
 
 It was downloaded from http://postgrey.schweikert.ch/
 

@@ -1,3 +1,9 @@
+postgrey (1.35-1miab1) trusty; urgency=low
+
+  * Added DNSWL.org whitelisting.
+
+ -- Joshua Tauberer <jt@occams.info>  Mon, 18 May 2015 21:58:40 +0000
+
 postgrey (1.35-1) unstable; urgency=low
 
   * New upstream release (Closes: 756486)
